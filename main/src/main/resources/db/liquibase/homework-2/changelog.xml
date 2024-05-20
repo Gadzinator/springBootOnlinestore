@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd"
+        logicalFilePath="homework-2">
+
+    <changeSet id="create_table_category" author="Alexei Grigorev">
+        <createTable tableName="category">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create_table_product" author="Alexei Grigorev">
+        <createTable tableName="product">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="brand" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_id" type="bigint">
+            </column>
+            <column name="price" type="number(9,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_available" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="received" type="date">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="product"
+                                 baseColumnNames="category_id"
+                                 constraintName="fk_product_category"
+                                 referencedTableName="category"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="create_table_order_status" author="Alexei Grigorev">
+        <createTable tableName="order_status">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create_table_order" author="Alexei Grigorev">
+        <createTable tableName="order">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="created" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="bigint">
+            </column>
+            <column name="order_status_id" type="bigint">
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="order"
+                                 baseColumnNames="id"
+                                 constraintName="fk_order_id"
+                                 referencedTableName="product"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="order"
+                                 baseColumnNames="order_status_id"
+                                 constraintName="fk_order_status_id"
+                                 referencedTableName="order_status"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="create_table_role" author="Alexei Grigorev">
+        <createTable tableName="role">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create_user" author="Alexei Grigorev">
+        <createTable tableName="user">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="user"
+                                 baseColumnNames="role_id"
+                                 constraintName="fk_user_role_role_id"
+                                 referencedTableName="role"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="create_table_waiting_list" author="Alexei Grigorev">
+        <createTable tableName="waiting_list">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint">
+            </column>
+            <column name="product_id" type="bigint">
+            </column>
+            <column name="counter" type="bigint">
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="waiting_list"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_waiting_list_user_id"
+                                 referencedTableName="user"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="waiting_list"
+                                 baseColumnNames="product_id"
+                                 constraintName="fk_waiting_list_product_id"
+                                 referencedTableName="product"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="create_user_index_id" author="Alexei Grigorev">
+        <createIndex indexName="idx_user_id" tableName="user">
+            <column name="role_id" type="bigint"/>
+        </createIndex>
+    </changeSet>
+
+
+    <changeSet id="create_role_index_id" author="Alexei Grigorev">
+        <createIndex indexName="idx_role_id" tableName="role">
+            <column name="id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="create_table_order_product" author="Alexei Grigorev">
+        <createTable tableName="order_product">
+            <column name="order_id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="product_id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="order_product"
+                                 baseColumnNames="order_id"
+                                 constraintName="fk_order_product_order_id"
+                                 referencedTableName="order"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="order_product"
+                                 baseColumnNames="product_id"
+                                 constraintName="fk_order_product_product_id"
+                                 referencedTableName="product"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="drop_order_product_id" author="Alexei Grigorev">
+        <dropColumn tableName="order" columnName="product_id"/>
+    </changeSet>
+
+    <changeSet id="delete_fk_order_id_product_id" author="Alexei Grigorev">
+        <dropForeignKeyConstraint baseTableName="order"
+                                  constraintName="fk_order_id"/>
+    </changeSet>
+
+    <changeSet id="insert_enum_category" author="Alexei Grigorev">
+        <insert tableName="category">
+            <column name="id">1</column>
+            <column name="name">TOY</column>
+        </insert>
+        <insert tableName="category">
+            <column name="id">2</column>
+            <column name="name">CLOTHES</column>
+        </insert>
+        <insert tableName="category">
+            <column name="id">3</column>
+            <column name="name">ELECTRONICS</column>
+        </insert>
+    </changeSet>
+
+    <changeSet id="insert_enum_order_status" author="Alexei Grigorev">
+        <insert tableName="order_status">
+            <column name="id">1</column>
+            <column name="name">READY</column>
+        </insert>
+        <insert tableName="order_status">
+            <column name="id">2</column>
+            <column name="name">NOT_READY</column>
+        </insert>
+        <insert tableName="order_status">
+            <column name="id">3</column>
+            <column name="name">IN_PROGRESS</column>
+        </insert>
+    </changeSet>
+
+    <changeSet id="drop_fk_product_category_id" author="Alexei Grigorev">
+        <dropForeignKeyConstraint baseTableName="product"
+                                  constraintName="fk_product_category"/>
+    </changeSet>
+
+    <changeSet id="drop_table_category" author="Alexei Grigorev">
+        <dropTable tableName="category"/>
+    </changeSet>
+
+    <changeSet id="rename_column_category_id" author="Alexei Grigorev">
+        <renameColumn tableName="product" oldColumnName="category_id" newColumnName="category"/>
+        <modifyDataType tableName="product" columnName="category" newDataType="varchar(25)"/>
+    </changeSet>
+
+    <changeSet id="drop_fk_order_order_status_id" author="Alexei Grigorev">
+        <dropForeignKeyConstraint baseTableName="order"
+                                  constraintName="fk_order_status_id"/>
+    </changeSet>
+
+    <changeSet id="add_auto_increment_product_id" author="Alexei Grigorev">
+        <addAutoIncrement columnName="id" columnDataType="INT" tableName="product"/>
+    </changeSet>
+
+    <changeSet id="add_auto_increment_order_id" author="Alexei Grigorev">
+        <addAutoIncrement columnName="id" columnDataType="INT" tableName="order"/>
+    </changeSet>
+
+    <changeSet id="add_auto_increment_user_id" author="Alexei Grigorev">
+        <addAutoIncrement columnName="id" columnDataType="INT" tableName="user"/>
+    </changeSet>
+
+    <changeSet id="add_auto_increment_waiting_list_id" author="Alexei Grigorev">
+        <addAutoIncrement columnName="id" columnDataType="INT" tableName="waiting_list"/>
+    </changeSet>
+
+    <changeSet id="rename_column_order_status" author="Alexei Grigorev">
+        <renameColumn tableName="order" oldColumnName="order_status_id" newColumnName="order_status"/>
+        <modifyDataType tableName="order" columnName="order_status" newDataType="varchar(25)"/>
+    </changeSet>
+
+    <changeSet id="drop_fk_user_role_id" author="Alexei Grigorev">
+        <dropForeignKeyConstraint baseTableName="user"
+                                  constraintName="fk_user_role_role_id"/>
+    </changeSet>
+
+    <changeSet id="drop_table_role" author="Alexei Grigorev">
+        <dropTable tableName="role"/>
+    </changeSet>
+
+    <changeSet id="rename_column_user_role_id" author="Alexei Grigorev">
+        <renameColumn tableName="user" oldColumnName="role_id" newColumnName="role"/>
+        <modifyDataType tableName="user" columnName="role" newDataType="varchar(25)"/>
+    </changeSet>
+
+    <changeSet id="rename_table_order" author="Alexei Grigorev">
+        <renameTable oldTableName="order" newTableName="order_item"/>
+    </changeSet>
+
+    <changeSet id="rename_table_user" author="Alexei Grigorev">
+        <renameTable oldTableName="user" newTableName="users"/>
+    </changeSet>
+
+    <changeSet id="add_column_order_user" author="Alexei Grigorev">
+        <addColumn tableName="order_item">
+            <column name="user_id" type="bigint"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="add_fk_order_user" author="Alexei Grigorev">
+        <addForeignKeyConstraint baseTableName="order_item"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_order_user"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+        />
+    </changeSet>
+
+    <changeSet id="create_new_table_category" author="Alexei Grigorev">
+        <createTable tableName="category">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="rename_column_product_category" author="Alexei Grigorev">
+        <renameColumn tableName="product" oldColumnName="category" newColumnName="category_id"/>
+        <modifyDataType tableName="product" columnName="category_id" newDataType="bigint"/>
+    </changeSet>
+
+    <changeSet id="add_fk_product_category" author="Alexei Grigorev">
+        <addForeignKeyConstraint baseTableName="product"
+                                 baseColumnNames="category_id"
+                                 constraintName="fk_product_category"
+                                 referencedTableName="category"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="delete_column_counter_waitingList" author="Alexei Grigorev">
+        <dropColumn tableName="waiting_list" columnName="counter"/>
+    </changeSet>
+</databaseChangeLog>
