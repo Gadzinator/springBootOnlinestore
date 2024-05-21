@@ -35,7 +35,6 @@ public class WaitingListService implements IWaitingListService {
 
 	private final IWaitingListMapper waitingListMapper;
 
-
 	@Transactional
 	@Override
 	public void save(long productId, String username) {

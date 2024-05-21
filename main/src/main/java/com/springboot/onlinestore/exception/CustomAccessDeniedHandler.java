@@ -19,9 +19,11 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 		String message = "Access denied";
 		if (auth != null) {
 			message += ", " + auth.getName() + " does not have sufficient access rights";
+
 			log.warn("User: " + auth.getName() + " attempted to access the protected URL: " + request.getRequestURI());
 		} else {
 			message += ", Anonymous user does not have sufficient access rights";
+
 			log.warn("Anonymous user attempted to access the protected URL: " + request.getRequestURI());
 		}
 

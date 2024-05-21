@@ -51,6 +51,7 @@ public class AuthService implements IAuthService {
 	@Override
 	public UserDetails loadUserByUsername(String userName) {
 		log.info("Starting loading a user by name: " + userName);
+
 		final MyUserPrincipal myUserPrincipal = userRepository.findByName(userName)
 				.map(MyUserPrincipal::new)
 				.orElseThrow(() -> new UserNotFoundException(String.format("Username '%s' not found", userName)));

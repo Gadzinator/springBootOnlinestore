@@ -28,7 +28,7 @@ public class Product {
 	@Column(name = "brand", nullable = false, length = 30)
 	private String brand;
 
-	@Column(name = "description",nullable = false)
+	@Column(name = "description", nullable = false)
 	private String description;
 
 	@ManyToOne(cascade = CascadeType.PERSIST, optional = false)

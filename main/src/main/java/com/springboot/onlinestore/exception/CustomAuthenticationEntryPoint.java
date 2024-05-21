@@ -17,9 +17,11 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 		String username = request.getRemoteUser();
 		if (username != null && !username.isEmpty()) {
 			message += ", " + username + " is not authenticated";
+
 			log.warn(message + "url" + request.getRequestURI());
 		} else {
 			message += ", Anonymous user is not authenticated";
+
 			log.warn(message + ", url" + request.getRequestURI());
 		}
 

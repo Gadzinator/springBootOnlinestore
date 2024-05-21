@@ -137,23 +137,6 @@ public class OrderService implements IOrderService {
 		}
 	}
 
-	@Transactional
-	@Override
-	public List<Product> findProductsByOrderId(long id) {
-		log.info("Starting finding products by order id: " + id);
-
-		final OrderResponseDto orderResponseDto = findById(id);
-		if (orderResponseDto != null) {
-			final List<Product> productList = orderRepository.findProductsOrderId(orderResponseDto.getId());
-
-			log.info("Finished finding products by order id: " + productList);
-
-			return productList;
-		} else {
-			throw new OrderNotFoundException("Order not was found by id " + id);
-		}
-	}
-
 	private int getTotalPrice(List<ProductDto> dtoList) {
 		return dtoList.stream()
 				.mapToInt(ProductDto::getPrice)

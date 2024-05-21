@@ -108,6 +108,7 @@ public class ProductService implements IProductService {
 	@Override
 	public List<ProductDto> findByParams(Map<String, String> params) {
 		log.info("Starting finding product by params: " + params);
+
 		List<ProductDto> productDtoList = new ArrayList<>();
 
 		final List<Product> productList = productRepository.findByParams(params);
@@ -207,6 +208,7 @@ public class ProductService implements IProductService {
 		final Optional<WaitingList> optionalWaitingList = waitingListRepository.findByProduct(product);
 
 		if (optionalWaitingList.isPresent()) {
+
 			log.error("The product cannot be deleted it is used in waitingList: " + product);
 
 			throw new ProductInUseException("The product cannot be deleted it is used in waitingList: " + product);

@@ -18,7 +18,5 @@ public interface IOrderService {
 
 	void update(OrderRequestDto orderRequestDto);
 
-	List<Product> findProductsByOrderId(long id);
-
 	void deleteById(long id);
 }

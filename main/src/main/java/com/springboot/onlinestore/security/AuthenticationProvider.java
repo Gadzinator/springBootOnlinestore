@@ -1,7 +1,6 @@
 package com.springboot.onlinestore.security;
 
 import com.springboot.onlinestore.service.IAuthService;
-import com.springboot.onlinestore.service.IUserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;

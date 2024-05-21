@@ -79,6 +79,7 @@ public class UserService implements IUserService {
 	@Override
 	public Page<UserDto> findAll(Pageable pageable) {
 		log.info("Start finding all users:");
+
 		Page<User> usersPage = userRepository.findAll(pageable);
 		if (usersPage.isEmpty()) {
 			throw new UserNotFoundException("Users were not found");
@@ -154,6 +155,7 @@ public class UserService implements IUserService {
 
 	private User createUserFromRegistrationUserDto(RegistrationUserDto registrationUserDto) {
 		log.info("Starting creating user from registration user: " + registrationUserDto);
+
 		User user = new User();
 		user.setName(registrationUserDto.getName());
 		user.setPassword(passwordEncoder.encode(registrationUserDto.getPassword()));
