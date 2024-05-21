@@ -1,4 +1,4 @@
-package com.springboot.onlinestore.entity;
+package com.springboot.onlinestore.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;

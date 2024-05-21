@@ -1,4 +1,4 @@
-package com.springboot.onlinestore.entity;
+package com.springboot.onlinestore.domain.entity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
