@@ -12,6 +12,7 @@ import com.springboot.onlinestore.repository.ICategoryRepository;
 import com.springboot.onlinestore.repository.IOrderRepository;
 import com.springboot.onlinestore.repository.IProductRepository;
 import com.springboot.onlinestore.repository.IWaitingListRepository;
+import com.springboot.onlinestore.service.IProductService;
 import com.springboot.onlinestore.utils.DateConstant;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -30,7 +31,7 @@ import java.util.Optional;
 @Log4j2
 @AllArgsConstructor
 @Service
-public class ProductService {
+public class ProductService implements IProductService {
 
 	private IProductRepository productRepository;
 
@@ -43,6 +44,7 @@ public class ProductService {
 	private IProductMapper productMapper;
 
 	@Transactional
+	@Override
 	public void save(ProductDto productDto) {
 		log.info("Starting adding product: " + productDto);
 
@@ -63,6 +65,7 @@ public class ProductService {
 		log.info("Finished adding product: " + productDto);
 	}
 
+	@Override
 	public ProductDto findById(long id) {
 		log.info("Starting finding product by id: " + id);
 
@@ -75,6 +78,7 @@ public class ProductService {
 		return productDto;
 	}
 
+	@Override
 	public Page<ProductDto> findAll(Pageable pageable) {
 		log.info("Starting finding all products: " + pageable);
 
@@ -88,6 +92,7 @@ public class ProductService {
 		return productsPage.map(productMapper::mapToProductDto);
 	}
 
+	@Override
 	public ProductDto findByName(String name) {
 		log.info("Starting finding product by name: " + name);
 
@@ -100,6 +105,7 @@ public class ProductService {
 		return productDto;
 	}
 
+	@Override
 	public List<ProductDto> findByParams(Map<String, String> params) {
 		log.info("Starting finding product by params: " + params);
 		List<ProductDto> productDtoList = new ArrayList<>();
@@ -122,6 +128,7 @@ public class ProductService {
 	}
 
 	@Transactional
+	@Override
 	public void update(ProductDto updateProductDto) {
 		log.info("Starting Updating product by id: " + updateProductDto.getId());
 
@@ -136,6 +143,7 @@ public class ProductService {
 	}
 
 	@Transactional
+	@Override
 	public void deleteByID(long id) {
 		log.info("Starting deleting product by id: " + id);
 		ProductDto productDto = findById(id);
