@@ -72,6 +72,13 @@ public class GlobalExceptionHandler {
 		return handleGlobal(exception, request, HttpStatus.BAD_REQUEST);
 	}
 
+	@ExceptionHandler(AuthenticationFailedException.class)
+	public ResponseEntity<?> handleAuthenticationFailedException(AuthenticationFailedException exception, WebRequest request) {
+		log.error("Authentication failed ", exception);
+
+		return handleGlobal(exception, request, HttpStatus.UNAUTHORIZED);
+	}
+
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<?> handleResourceNotFoundException(MethodArgumentNotValidException exception, WebRequest request) {
 		log.error(exception.getMessage());
