@@ -79,6 +79,13 @@ public class GlobalExceptionHandler {
 		return handleGlobal(exception, request, HttpStatus.UNAUTHORIZED);
 	}
 
+	@ExceptionHandler(WaitingListNotFoundException.class)
+	public ResponseEntity<?> handleWaitingListNotFoundException(WaitingListNotFoundException exception, WebRequest request) {
+		log.error("WaitingList not found ", exception);
+
+		return handleGlobal(exception, request, HttpStatus.NOT_FOUND);
+	}
+
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<?> handleResourceNotFoundException(MethodArgumentNotValidException exception, WebRequest request) {
 		log.error(exception.getMessage());
