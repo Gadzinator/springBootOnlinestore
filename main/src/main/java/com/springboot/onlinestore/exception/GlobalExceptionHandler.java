@@ -44,6 +44,34 @@ public class GlobalExceptionHandler {
 		return handleGlobal(exception, request, HttpStatus.LOCKED);
 	}
 
+	@ExceptionHandler(OrderNotFoundException.class)
+	public ResponseEntity<?> handleOrderNotFoundException(OrderNotFoundException exception, WebRequest request) {
+		log.error("Order not found ", exception);
+
+		return handleGlobal(exception, request, HttpStatus.NOT_FOUND);
+	}
+
+	@ExceptionHandler(UserNotFoundException.class)
+	public ResponseEntity<?> handleUserNotFoundException(UserNotFoundException exception, WebRequest request) {
+		log.error("User not found ", exception);
+
+		return handleGlobal(exception, request, HttpStatus.NOT_FOUND);
+	}
+
+	@ExceptionHandler(UsernameNotUniqueException.class)
+	public ResponseEntity<?> handleUsernameNotUniqueException(UsernameNotUniqueException exception, WebRequest request) {
+		log.error("Username not unique ", exception);
+
+		return handleGlobal(exception, request, HttpStatus.CONFLICT);
+	}
+
+	@ExceptionHandler(PasswordMismatchException.class)
+	public ResponseEntity<?> handlePasswordMismatchException(PasswordMismatchException exception, WebRequest request) {
+		log.error("Password mismatch ", exception);
+
+		return handleGlobal(exception, request, HttpStatus.BAD_REQUEST);
+	}
+
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<?> handleResourceNotFoundException(MethodArgumentNotValidException exception, WebRequest request) {
 		log.error(exception.getMessage());
