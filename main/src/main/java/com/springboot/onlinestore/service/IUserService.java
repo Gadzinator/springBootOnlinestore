@@ -14,6 +14,8 @@ public interface IUserService {
 
 	Page<UserDto> findAll(Pageable pageable);
 
+	void changeUserRole(String userName, String newRole);
+
 	UserDto findByName(String name);
 
 	void deleteById(long id);

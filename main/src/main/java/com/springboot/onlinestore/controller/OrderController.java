@@ -63,6 +63,6 @@ public class OrderController {
 	public ResponseEntity<?> deleteById(@PathVariable("id") Long id) {
 		orderService.deleteById(id);
 
-		return new ResponseEntity<>("The order has been deleted", HttpStatus.NO_CONTENT);
+		return new ResponseEntity<>("The order has been deleted", HttpStatus.ACCEPTED);
 	}
 }

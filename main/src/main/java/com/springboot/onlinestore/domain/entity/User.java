@@ -1,5 +1,6 @@
 package com.springboot.onlinestore.domain.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -9,13 +10,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.NamedAttributeNode;
 import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
+import java.util.List;
+import java.util.StringJoiner;
+
 @Data
 @Entity
-@NamedEntityGraph(name = "graph.User.role",
-		attributeNodes = @NamedAttributeNode(value = "role"))
 @Table(name = "users")
 public class User {
 
@@ -36,6 +39,19 @@ public class User {
 	@Column(name = "role")
 	private Role role;
 
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Order> orders;
+
 	public User() {
+	}
+
+	@Override
+	public String toString() {
+		return new StringJoiner(", ", User.class.getSimpleName() + "[", "]")
+				.add("id=" + id)
+				.add("name='" + name + "'")
+				.add("email='" + email + "'")
+				.add("role=" + role)
+				.toString();
 	}
 }

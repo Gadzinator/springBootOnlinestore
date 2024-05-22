@@ -59,6 +59,6 @@ public class WaitingListController {
 	public ResponseEntity<?> delete(@PathVariable("id") Long id) {
 		waitingListService.delete(id);
 
-		return new ResponseEntity<>("WaitingList delete", HttpStatus.NO_CONTENT);
+		return new ResponseEntity<>("WaitingList delete", HttpStatus.ACCEPTED);
 	}
 }

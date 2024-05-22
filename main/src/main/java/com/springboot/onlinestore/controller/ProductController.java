@@ -3,7 +3,6 @@ package com.springboot.onlinestore.controller;
 import com.springboot.onlinestore.domain.dto.ProductDto;
 import com.springboot.onlinestore.service.IProductService;
 import com.springboot.onlinestore.service.impl.ProductService;
-import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +32,7 @@ public class ProductController {
 	}
 
 	@PostMapping
-	public ResponseEntity<?> save(@RequestBody(required = false) @Valid ProductDto productDto) {
+	public ResponseEntity<?> save(@RequestBody(required = false) ProductDto productDto) {
 		if (productDto == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
@@ -85,6 +84,6 @@ public class ProductController {
 	public ResponseEntity<?> deleteByID(@PathVariable("id") Long id) {
 		productService.deleteByID(id);
 
-		return new ResponseEntity<>("The product has been removed", HttpStatus.NO_CONTENT);
+		return new ResponseEntity<>("The product has been removed", HttpStatus.ACCEPTED);
 	}
 }

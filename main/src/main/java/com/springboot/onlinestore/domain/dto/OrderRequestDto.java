@@ -2,8 +2,11 @@ package com.springboot.onlinestore.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.springboot.onlinestore.domain.ValueOfEnum;
 import com.springboot.onlinestore.domain.entity.OrderStatus;
 import com.springboot.onlinestore.utils.DateConstant;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -29,6 +32,7 @@ public class OrderRequestDto {
 	private List<Long> productIds;
 
 	@JsonProperty("orderStatus")
-	@NotBlank(message = "orderStatus should not be blank")
+	@ValueOfEnum(enumClass = OrderStatus.class)
+	@Enumerated(value = EnumType.STRING)
 	private OrderStatus orderStatus;
 }

@@ -9,12 +9,14 @@ import com.springboot.onlinestore.exception.PasswordMismatchException;
 import com.springboot.onlinestore.exception.UserNotFoundException;
 import com.springboot.onlinestore.exception.UsernameNotUniqueException;
 import com.springboot.onlinestore.mapper.IUserMapper;
+import com.springboot.onlinestore.repository.IOrderRepository;
 import com.springboot.onlinestore.repository.IUserRepository;
 import com.springboot.onlinestore.service.IUserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,8 @@ import java.util.Optional;
 public class UserService implements IUserService {
 
 	private IUserRepository userRepository;
+
+	private IOrderRepository orderRepository;
 
 	private final PasswordEncoder passwordEncoder;
 
@@ -88,6 +92,19 @@ public class UserService implements IUserService {
 		log.info("Finished finding all users: " + usersPage);
 
 		return usersPage.map(userMapper::mapToUserDto);
+	}
+
+	@Override
+	@Transactional
+	public void changeUserRole(String userName, String newRole) {
+		log.info("Starting work on changing a user's role: " + userName + " to the role of " + newRole);
+
+		final User user = userRepository.findByName(userName)
+				.orElseThrow(() -> new UsernameNotFoundException("There is no user with that name " + userName));
+		user.setRole(Role.valueOf(newRole));
+		userRepository.save(user);
+
+		log.info("Changed user role: " + user + " to role " + user.getRole());
 	}
 
 	@Transactional

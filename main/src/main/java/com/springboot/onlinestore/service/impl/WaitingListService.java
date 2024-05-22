@@ -116,7 +116,7 @@ public class WaitingListService implements IWaitingListService {
 		final User user = userRepository.findByName(name)
 				.orElseThrow(() -> new UserNotFoundException("User was not found by name " + name));
 
-		log.info("Finished finding user by name: " + user);
+		log.info("Finished finding user by name: " + user.getName());
 
 		return user;
 	}
