@@ -42,7 +42,6 @@ public class WaitingListController {
 	@GetMapping("/{page}/{size}")
 	public ResponseEntity<?> findAll(@PathVariable("page") int page, @PathVariable("size") int size) {
 		final Pageable pageable = PageRequest.of(page, size);
-
 		final Page<WaitingLIstDto> waitingLIstDtoPage = waitingListService.findAll(pageable);
 
 		return new ResponseEntity<>(waitingLIstDtoPage, HttpStatus.OK);

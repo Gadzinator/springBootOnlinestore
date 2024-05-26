@@ -7,8 +7,8 @@ import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring", uses = ICategoryMapper.class)
-public interface IProductMapper {
+@Mapper(componentModel = "spring", uses = CategoryMapper.class)
+public interface ProductMapper {
 
 	@Mapping(source = "created", target = "created", dateFormat = DateConstant.DEFAULT_DATE_PATTERN)
 	@Mapping(source = "received", target = "received", dateFormat = DateConstant.DEFAULT_DATE_PATTERN)

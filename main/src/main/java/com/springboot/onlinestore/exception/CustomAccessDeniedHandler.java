@@ -17,13 +17,12 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 	public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String message = "Access denied";
+
 		if (auth != null) {
 			message += ", " + auth.getName() + " does not have sufficient access rights";
-
 			log.warn("User: " + auth.getName() + " attempted to access the protected URL: " + request.getRequestURI());
 		} else {
 			message += ", Anonymous user does not have sufficient access rights";
-
 			log.warn("Anonymous user attempted to access the protected URL: " + request.getRequestURI());
 		}
 

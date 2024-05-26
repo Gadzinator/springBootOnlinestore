@@ -12,11 +12,11 @@ import java.util.Collections;
 
 @Data
 @Builder
-public class MyUserPrincipal implements UserDetails {
+public class UserPrincipal implements UserDetails {
 
 	private User user;
 
-	public MyUserPrincipal(User user) {
+	public UserPrincipal(User user) {
 		this.user = user;
 	}
 

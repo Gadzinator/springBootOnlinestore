@@ -1,4 +1,4 @@
-package com.springboot.onlinestore.domain;
+package com.springboot.onlinestore.validation;
 
 import com.springboot.onlinestore.domain.entity.OrderStatus;
 import jakarta.validation.ConstraintValidator;

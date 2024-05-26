@@ -1,6 +1,6 @@
 package com.springboot.onlinestore.service;
 
-import com.springboot.onlinestore.domain.dto.PasswordChangeRequest;
+import com.springboot.onlinestore.domain.dto.ChangePasswordRequest;
 import com.springboot.onlinestore.domain.dto.RegistrationUserDto;
 import com.springboot.onlinestore.domain.dto.UserDto;
 import org.springframework.data.domain.Page;
@@ -20,5 +20,5 @@ public interface IUserService {
 
 	void deleteById(long id);
 
-	void changePassword(String userName, PasswordChangeRequest passwordChangeRequest);
+	void changePassword(String userName, ChangePasswordRequest changePasswordRequest);
 }

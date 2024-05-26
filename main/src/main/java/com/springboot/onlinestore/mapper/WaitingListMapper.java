@@ -8,8 +8,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-@Mapper(componentModel = "spring", uses = IProductMapper.class)
-public interface IWaitingListMapper {
+@Mapper(componentModel = "spring", uses = ProductMapper.class)
+public interface WaitingListMapper {
 
 	@Mapping(source = "user", target = "username", qualifiedByName = "mapUserToUsername")
 	@Mapping(source = "product", target = "productDto")

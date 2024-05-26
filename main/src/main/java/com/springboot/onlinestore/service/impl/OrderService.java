@@ -9,10 +9,9 @@ import com.springboot.onlinestore.domain.entity.Product;
 import com.springboot.onlinestore.domain.entity.User;
 import com.springboot.onlinestore.exception.OrderNotFoundException;
 import com.springboot.onlinestore.exception.UserNotFoundException;
-import com.springboot.onlinestore.mapper.IOrderMapper;
-import com.springboot.onlinestore.mapper.IOrderResponseMapper;
-import com.springboot.onlinestore.mapper.IProductMapper;
-import com.springboot.onlinestore.mapper.IUserMapper;
+import com.springboot.onlinestore.mapper.OrderMapper;
+import com.springboot.onlinestore.mapper.ProductMapper;
+import com.springboot.onlinestore.mapper.UserMapper;
 import com.springboot.onlinestore.repository.IOrderRepository;
 import com.springboot.onlinestore.service.IOrderService;
 import com.springboot.onlinestore.service.IProductService;
@@ -41,30 +40,22 @@ public class OrderService implements IOrderService {
 
 	private IProductService productService;
 
-	private IProductMapper productMapper;
+	private ProductMapper productMapper;
 
-	private IOrderMapper orderMapper;
+	private OrderMapper orderMapper;
 
-	private IUserMapper userMapper;
-
-	private IOrderResponseMapper orderResponseMapper;
+	private UserMapper userMapper;
 
 	@Transactional
 	@Override
 	public void save(OrderRequestDto orderRequestDto) {
 		log.info("Start adding an order: " + orderRequestDto);
-
 		final UserDto userDto = userService.findById(orderRequestDto.getUserId());
-		if (userDto == null) {
-			throw new UserNotFoundException("User was not found by id " + orderRequestDto.getUserId());
-		}
-
 		final User user = userMapper.mapToUser(userDto);
-		final Order order = orderResponseMapper.mapToOrder(orderRequestDto);
+		final Order order = orderMapper.mapToOrder(orderRequestDto);
+
 		order.setUser(user);
-
 		orderRepository.save(order);
-
 		log.info("Finishing adding an order " + order);
 	}
 
@@ -72,7 +63,6 @@ public class OrderService implements IOrderService {
 	@Override
 	public OrderResponseDto findById(long id) {
 		log.info("Start finding order by id: " + id);
-
 		final OrderResponseDto orderResponseDto = orderRepository.findById(id).map(order -> orderMapper.mapToOrderDto(order)).orElseThrow(
 				() -> new OrderNotFoundException("Order not was found by id " + id));
 
@@ -81,7 +71,6 @@ public class OrderService implements IOrderService {
 
 		orderResponseDto.setTotalPrice(totalPrice);
 		orderResponseDto.setUserId(userDto.getId());
-
 		log.info("Finishing finding order by id: " + orderResponseDto);
 
 		return orderResponseDto;
@@ -94,9 +83,10 @@ public class OrderService implements IOrderService {
 
 		Page<Order> ordersPage = orderRepository.findAll(pageable);
 		if (ordersPage.isEmpty()) {
-			throw new OrderNotFoundException("Orders were not found");
+			final String errorMessage = "Orders were not found";
+			log.error(errorMessage);
+			throw new OrderNotFoundException(errorMessage);
 		}
-
 		log.info("Finished finding all orders: " + ordersPage);
 
 		return ordersPage.map(orderMapper::mapToOrderDto);
@@ -106,19 +96,18 @@ public class OrderService implements IOrderService {
 	@Override
 	public void update(OrderRequestDto orderRequestDto) {
 		log.info("Starting updating order: " + orderRequestDto);
-
 		final OrderResponseDto orderResponseDto = findById(orderRequestDto.getId());
-		if (orderResponseDto != null) {
 
+		if (orderResponseDto != null) {
 			final Order order = orderMapper.mapToOrder(orderResponseDto);
 			updateAllFields(order, orderRequestDto);
 
 			orderRepository.saveAndFlush(order);
-
 			log.info("Finished updated successfully: " + order);
-
 		} else {
-			throw new OrderNotFoundException("Order not was found by id " + orderRequestDto.getId());
+			final String errorMessage = "Order not was found by id " + orderRequestDto.getId();
+			log.error(errorMessage);
+			throw new OrderNotFoundException(errorMessage);
 		}
 	}
 
@@ -126,49 +115,47 @@ public class OrderService implements IOrderService {
 	@Override
 	public void deleteById(long id) {
 		log.info("Starting delete order by id: " + id);
-
 		final OrderResponseDto orderResponseDto = findById(id);
+
 		if (orderResponseDto != null) {
 			orderRepository.deleteById(orderResponseDto.getId());
 
 			log.info("Finished deleting order by id");
 		} else {
-			throw new OrderNotFoundException("Order not was found by id " + id);
+			final String errorMessage = "Order not was found by id " + id;
+			log.error(errorMessage);
+			throw new OrderNotFoundException(errorMessage);
 		}
 	}
 
-	private int getTotalPrice(List<ProductDto> dtoList) {
-		return dtoList.stream()
+	private int getTotalPrice(List<ProductDto> products) {
+		return products.stream()
 				.mapToInt(ProductDto::getPrice)
 				.sum();
 	}
 
+	private void updateAllFields(Order order, OrderRequestDto orderRequestDto) {
+		log.info("Starting updating all fields: " + order);
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DateConstant.DEFAULT_DATE_PATTERN);
+		final List<Product> products = getListProducts(orderRequestDto);
+		order.setCreated(LocalDate.parse(orderRequestDto.getCreated(), dateTimeFormatter));
+		order.setProducts(products);
+		order.setOrderStatus(orderRequestDto.getOrderStatus());
+		log.info("Finished updating all fields: " + order);
+	}
+
 	private List<Product> getListProducts(OrderRequestDto orderRequestDto) {
 		log.info("Starting getting list products: " + orderRequestDto);
-
 		List<Product> products = new ArrayList<>();
 		final List<Long> productIds = orderRequestDto.getProductIds();
+
 		for (Long productId : productIds) {
 			final ProductDto productDto = productService.findById(productId);
 			final Product product = productMapper.mapToProduct(productDto);
 			products.add(product);
 		}
-
 		log.info("Finished getting list products: " + products);
 
 		return products;
-	}
-
-	private void updateAllFields(Order order, OrderRequestDto orderRequestDto) {
-		log.info("Starting updating all fields: " + order);
-
-		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DateConstant.DEFAULT_DATE_PATTERN);
-		final List<Product> products = getListProducts(orderRequestDto);
-
-		order.setCreated(LocalDate.parse(orderRequestDto.getCreated(), dateTimeFormatter));
-		order.setProducts(products);
-		order.setOrderStatus(orderRequestDto.getOrderStatus());
-
-		log.info("Finished updating all fields: " + order);
 	}
 }

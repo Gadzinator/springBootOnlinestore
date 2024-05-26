@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,11 +21,8 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<String> handleException(Exception e) {
 		log.error("Exception occurred ", e);
-		StringWriter sw = new StringWriter();
-		PrintWriter pw = new PrintWriter(sw);
-		e.printStackTrace(pw);
-		final String stackTrace = sw.toString();
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(stackTrace);
+
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
 
 	@ExceptionHandler(ProductNotFoundException.class)
@@ -39,9 +34,9 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(ProductInUseException.class)
 	public ResponseEntity<?> handleProductInUseException(ProductInUseException exception, WebRequest request) {
-		log.error("Access denied ", exception);
+		log.error("Product already in use ", exception);
 
-		return handleGlobal(exception, request, HttpStatus.LOCKED);
+		return handleGlobal(exception, request, HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(OrderNotFoundException.class)
@@ -87,7 +82,7 @@ public class GlobalExceptionHandler {
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<?> handleResourceNotFoundException(MethodArgumentNotValidException exception, WebRequest request) {
+	public ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception, WebRequest request) {
 		log.error(exception.getMessage());
 		List<ObjectError> allErrors = exception.getBindingResult().getAllErrors();
 

@@ -1,6 +1,5 @@
 package com.springboot.onlinestore.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 
 @Getter

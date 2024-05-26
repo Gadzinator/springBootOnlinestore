@@ -5,7 +5,7 @@ import com.springboot.onlinestore.domain.dto.ProductDto;
 import com.springboot.onlinestore.domain.entity.Category;
 import com.springboot.onlinestore.domain.entity.Product;
 import com.springboot.onlinestore.exception.ProductNotFoundException;
-import com.springboot.onlinestore.mapper.IProductMapperImpl;
+import com.springboot.onlinestore.mapper.ProductMapperImpl;
 import com.springboot.onlinestore.repository.ICategoryRepository;
 import com.springboot.onlinestore.repository.IOrderRepository;
 import com.springboot.onlinestore.repository.IProductRepository;
@@ -58,7 +58,7 @@ class ProductServiceTest {
 	private IProductRepository productRepository;
 
 	@Spy
-	private IProductMapperImpl productMapper;
+	private ProductMapperImpl productMapper;
 
 	@Mock
 	private ICategoryRepository categoryRepository;

@@ -6,7 +6,7 @@ import com.springboot.onlinestore.domain.entity.User;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface IUserMapper {
+public interface UserMapper {
 
 	UserDto mapToUserDto(User user);
 

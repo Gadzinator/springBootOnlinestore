@@ -2,10 +2,11 @@ package com.springboot.onlinestore.controller;
 
 import com.springboot.onlinestore.domain.dto.JwtRequest;
 import com.springboot.onlinestore.domain.dto.JwtResponse;
-import com.springboot.onlinestore.domain.dto.PasswordChangeRequest;
+import com.springboot.onlinestore.domain.dto.ChangePasswordRequest;
 import com.springboot.onlinestore.domain.dto.RegistrationUserDto;
 import com.springboot.onlinestore.service.IAuthService;
 import com.springboot.onlinestore.service.IUserService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +27,9 @@ public class AuthController {
 	private final IAuthService authService;
 
 	@PostMapping("/auth")
-	public ResponseEntity<?> createAuthToken(@RequestBody JwtRequest authRequest) {
+	public ResponseEntity<?> createAuthToken(@RequestBody @Valid JwtRequest authRequest) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
 		if (auth == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
@@ -45,8 +47,8 @@ public class AuthController {
 	}
 
 	@PostMapping("/changePassword")
-	public ResponseEntity<?> changePassword(@RequestBody PasswordChangeRequest passwordChangeRequest, Principal principal) {
-		userService.changePassword(principal.getName(), passwordChangeRequest);
+	public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest, Principal principal) {
+		userService.changePassword(principal.getName(), changePasswordRequest);
 
 		return ResponseEntity.ok("Password changed successfully");
 	}

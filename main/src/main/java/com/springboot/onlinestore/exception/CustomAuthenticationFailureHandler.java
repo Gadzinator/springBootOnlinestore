@@ -14,15 +14,11 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
 			throws IOException {
-		String errorMessage = "You're not logged in";
-
 		log.error("Authentication failure: {}", exception.getMessage());
-
+		String errorMessage = "You're not logged in";
 		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-
 		response.setContentType("text/plain");
 		response.setCharacterEncoding("UTF-8");
-
 		response.getWriter().write(errorMessage);
 	}
 }

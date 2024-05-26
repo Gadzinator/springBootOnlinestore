@@ -4,8 +4,8 @@ import com.springboot.onlinestore.domain.dto.CategoryDto;
 import com.springboot.onlinestore.domain.entity.Category;
 import org.mapstruct.Mapper;
 
-@Mapper(componentModel = "spring", uses = IProductMapper.class)
-public interface ICategoryMapper {
+@Mapper(componentModel = "spring", uses = ProductMapper.class)
+public interface CategoryMapper {
 
 	CategoryDto mapToCategoryDto(Category category);
 

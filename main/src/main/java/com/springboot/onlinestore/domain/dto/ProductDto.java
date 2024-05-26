@@ -2,7 +2,6 @@ package com.springboot.onlinestore.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import com.springboot.onlinestore.utils.DateConstant;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -36,8 +35,8 @@ public class ProductDto {
 	@NotBlank(message = "created should not be blank")
 	private String created;
 
-	@NotBlank(message = "isAvailable should not be blank")
-	@JsonProperty("is_available")
+	@NotBlank(message = "availability should not be blank")
+	@JsonProperty("isAvailable")
 	private boolean isAvailable;
 
 	@NotBlank(message = "received should not be blank")

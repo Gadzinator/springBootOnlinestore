@@ -1,8 +1,7 @@
 package com.springboot.onlinestore.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.springboot.onlinestore.domain.ValueOfEnum;
+import com.springboot.onlinestore.validation.ValueOfEnum;
 import com.springboot.onlinestore.domain.entity.OrderStatus;
 import com.springboot.onlinestore.utils.DateConstant;
 import jakarta.persistence.EnumType;
@@ -31,7 +30,6 @@ public class OrderRequestDto {
 	@Size(min = 1, message = "at least one productsId should be present")
 	private List<Long> productIds;
 
-	@JsonProperty("orderStatus")
 	@ValueOfEnum(enumClass = OrderStatus.class)
 	@Enumerated(value = EnumType.STRING)
 	private OrderStatus orderStatus;

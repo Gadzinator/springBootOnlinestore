@@ -1,4 +1,4 @@
-package com.springboot.onlinestore.domain;
+package com.springboot.onlinestore.validation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

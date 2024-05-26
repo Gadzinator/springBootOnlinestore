@@ -4,7 +4,6 @@ import com.springboot.onlinestore.domain.dto.UserDto;
 import com.springboot.onlinestore.domain.dto.UserRoleChangeRequest;
 import com.springboot.onlinestore.service.IUserService;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

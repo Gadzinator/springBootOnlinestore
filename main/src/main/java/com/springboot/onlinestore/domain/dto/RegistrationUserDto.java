@@ -1,6 +1,5 @@
 package com.springboot.onlinestore.domain.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -20,7 +19,6 @@ public class RegistrationUserDto {
 	private String password;
 
 	@NotBlank(message = "confirmPassword should not be blank")
-	@JsonProperty("confirm_password")
 	@Size(min = 6, max = 20, message = "confirmPassword length should be between 6 and 20 characters")
 	private String confirmPassword;
 

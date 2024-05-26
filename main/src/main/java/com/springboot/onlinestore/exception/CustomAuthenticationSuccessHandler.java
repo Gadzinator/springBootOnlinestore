@@ -14,7 +14,6 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
 		response.getWriter().write("You have successfully logged in");
-
-		log.info("You have successfully logged in" + authentication.getName());
+		log.info("You have successfully logged id by name " + authentication.getName());
 	}
 }

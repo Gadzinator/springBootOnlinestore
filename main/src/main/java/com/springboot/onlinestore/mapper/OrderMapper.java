@@ -1,9 +1,12 @@
 package com.springboot.onlinestore.mapper;
 
 import com.springboot.onlinestore.domain.dto.OrderRequestDto;
+import com.springboot.onlinestore.domain.dto.OrderResponseDto;
+import com.springboot.onlinestore.domain.dto.ProductDto;
 import com.springboot.onlinestore.domain.entity.Order;
 import com.springboot.onlinestore.domain.entity.OrderStatus;
 import com.springboot.onlinestore.domain.entity.Product;
+import com.springboot.onlinestore.domain.entity.User;
 import com.springboot.onlinestore.utils.DateConstant;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
@@ -13,8 +16,19 @@ import org.mapstruct.Named;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring", uses = {ICategoryMapper.class, IProductMapper.class})
-public interface IOrderResponseMapper {
+@Mapper(componentModel = "spring", uses = {ProductMapper.class, CategoryMapper.class})
+public interface OrderMapper {
+
+	@Mapping(target = "products", source = "products")
+	@Mapping(target = "created", dateFormat = DateConstant.DEFAULT_DATE_PATTERN)
+	@Mapping(target = "user", source = "userId", qualifiedByName = "userIdToUser")
+	Order mapToOrder(OrderResponseDto orderResponseDto);
+
+	@Mapping(source = "products", target = "products")
+	@Mapping(source = "created", target = "created", dateFormat = DateConstant.DEFAULT_DATE_PATTERN)
+	@Mapping(source = "user", target = "userId", qualifiedByName = "userToUserId")
+	@Mapping(target = "totalPrice", expression = "java(getTotalPrice(orderResponseDto.getProducts()))")
+	OrderResponseDto mapToOrderDto(Order order);
 
 	@Mapping(source = "productIds", target = "products")
 	@Mapping(target = "created", dateFormat = DateConstant.DEFAULT_DATE_PATTERN)
@@ -57,5 +71,23 @@ public interface IOrderResponseMapper {
 	@Named("mapStringToOrderStatus")
 	default OrderStatus mapStringToOrderStatus(String orderStatus) {
 		return orderStatus != null ? OrderStatus.valueOf(orderStatus) : null;
+	}
+
+	@Named("userIdToUser")
+	default User userIdToUser(long userId) {
+		User user = new User();
+		user.setId(userId);
+		return user;
+	}
+
+	@Named("userToUserId")
+	default long userToUserId(User user) {
+		return user.getId();
+	}
+
+	default int getTotalPrice(List<ProductDto> dtoList) {
+		return dtoList.stream()
+				.mapToInt(ProductDto::getPrice)
+				.sum();
 	}
 }

@@ -36,7 +36,6 @@ public class ProductController {
 		if (productDto == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-
 		productService.save(productDto);
 
 		return new ResponseEntity<>("Product add", HttpStatus.CREATED);

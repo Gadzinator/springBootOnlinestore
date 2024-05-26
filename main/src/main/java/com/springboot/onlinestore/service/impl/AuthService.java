@@ -1,6 +1,6 @@
 package com.springboot.onlinestore.service.impl;
 
-import com.springboot.onlinestore.domain.MyUserPrincipal;
+import com.springboot.onlinestore.domain.UserPrincipal;
 import com.springboot.onlinestore.domain.dto.JwtRequest;
 import com.springboot.onlinestore.exception.AuthenticationFailedException;
 import com.springboot.onlinestore.exception.UserNotFoundException;
@@ -30,19 +30,21 @@ public class AuthService implements IAuthService {
 	@Override
 	public String createAuthToken(JwtRequest authRequest) {
 		log.info("Starting creating an authentication token: " + authRequest);
-
 		UserDetails userDetails = loadUserByUsername(authRequest.getUsername());
+
 		if (!passwordEncoder.matches(authRequest.getPassword(), userDetails.getPassword())) {
-			throw new AuthenticationFailedException("Password not valid");
+			final String errorMessage = "Password not valid";
+			log.error(errorMessage);
+			throw new AuthenticationFailedException(errorMessage);
 		}
 
 		Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, authRequest.getPassword(), userDetails.getAuthorities());
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		final boolean authenticated = authentication.isAuthenticated();
+
 		if (!authenticated) {
 			throw new AuthenticationFailedException("Authentication failed");
 		}
-
 		log.info("Finished creating the token for the user: " + userDetails);
 
 		return jwtTokenUtils.generateToken(userDetails);
@@ -51,13 +53,11 @@ public class AuthService implements IAuthService {
 	@Override
 	public UserDetails loadUserByUsername(String userName) {
 		log.info("Starting loading a user by name: " + userName);
-
-		final MyUserPrincipal myUserPrincipal = userRepository.findByName(userName)
-				.map(MyUserPrincipal::new)
+		final UserPrincipal userPrincipal = userRepository.findByName(userName)
+				.map(UserPrincipal::new)
 				.orElseThrow(() -> new UserNotFoundException(String.format("Username '%s' not found", userName)));
+		log.info("Finalizing user upload by name: " + userPrincipal);
 
-		log.info("Finalizing user upload by name: " + myUserPrincipal);
-
-		return myUserPrincipal;
+		return userPrincipal;
 	}
 }
