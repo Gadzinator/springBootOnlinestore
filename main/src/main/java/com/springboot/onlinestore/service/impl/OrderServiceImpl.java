@@ -8,14 +8,13 @@ import com.springboot.onlinestore.domain.entity.Order;
 import com.springboot.onlinestore.domain.entity.Product;
 import com.springboot.onlinestore.domain.entity.User;
 import com.springboot.onlinestore.exception.OrderNotFoundException;
-import com.springboot.onlinestore.exception.UserNotFoundException;
 import com.springboot.onlinestore.mapper.OrderMapper;
 import com.springboot.onlinestore.mapper.ProductMapper;
 import com.springboot.onlinestore.mapper.UserMapper;
-import com.springboot.onlinestore.repository.IOrderRepository;
-import com.springboot.onlinestore.service.IOrderService;
-import com.springboot.onlinestore.service.IProductService;
-import com.springboot.onlinestore.service.IUserService;
+import com.springboot.onlinestore.repository.OrderRepository;
+import com.springboot.onlinestore.service.OrderService;
+import com.springboot.onlinestore.service.ProductService;
+import com.springboot.onlinestore.service.UserService;
 import com.springboot.onlinestore.utils.DateConstant;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -32,13 +31,13 @@ import java.util.List;
 @Log4j2
 @AllArgsConstructor
 @Service
-public class OrderService implements IOrderService {
+public class OrderServiceImpl implements OrderService {
 
-	private IUserService userService;
+	private UserService userService;
 
-	private IOrderRepository orderRepository;
+	private OrderRepository orderRepository;
 
-	private IProductService productService;
+	private ProductService productService;
 
 	private ProductMapper productMapper;
 

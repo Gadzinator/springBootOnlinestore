@@ -5,7 +5,7 @@ import com.springboot.onlinestore.domain.dto.OrderResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface IOrderService {
+public interface OrderService {
 
 	void save(OrderRequestDto orderRequestDto);
 

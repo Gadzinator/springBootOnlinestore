@@ -6,11 +6,11 @@ import com.springboot.onlinestore.domain.entity.Category;
 import com.springboot.onlinestore.domain.entity.Product;
 import com.springboot.onlinestore.exception.ProductNotFoundException;
 import com.springboot.onlinestore.mapper.ProductMapperImpl;
-import com.springboot.onlinestore.repository.ICategoryRepository;
-import com.springboot.onlinestore.repository.IOrderRepository;
-import com.springboot.onlinestore.repository.IProductRepository;
-import com.springboot.onlinestore.repository.IWaitingListRepository;
-import com.springboot.onlinestore.service.impl.ProductService;
+import com.springboot.onlinestore.repository.CategoryRepository;
+import com.springboot.onlinestore.repository.OrderRepository;
+import com.springboot.onlinestore.repository.ProductRepository;
+import com.springboot.onlinestore.repository.WaitingListRepository;
+import com.springboot.onlinestore.service.impl.ProductServiceImpl;
 import com.springboot.onlinestore.utils.DateConstant;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,7 +44,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class ProductServiceTest {
+class ProductServiceImplTest {
 
 	private static final String PRODUCT_NAME = "Toy name";
 
@@ -55,22 +55,22 @@ class ProductServiceTest {
 	private static final int PAGE_SIZE = 10;
 
 	@Mock
-	private IProductRepository productRepository;
+	private ProductRepository productRepository;
 
 	@Spy
 	private ProductMapperImpl productMapper;
 
 	@Mock
-	private ICategoryRepository categoryRepository;
+	private CategoryRepository categoryRepository;
 
 	@Mock
-	private IOrderRepository orderRepository;
+	private OrderRepository orderRepository;
 
 	@Mock
-	private IWaitingListRepository waitingListRepository;
+	private WaitingListRepository waitingListRepository;
 
 	@InjectMocks
-	private ProductService productService;
+	private ProductServiceImpl productServiceImpl;
 
 	@Test
 	public void testSave() {
@@ -85,7 +85,7 @@ class ProductServiceTest {
 		when(productRepository.save(any(Product.class))).thenReturn(product);
 
 		// when
-		productService.save(productDto);
+		productServiceImpl.save(productDto);
 
 		// then
 		verify(productMapper).mapToProduct(productDto);
@@ -98,7 +98,7 @@ class ProductServiceTest {
 	@Test
 	public void testSaveProductWhenNull() {
 		// when and then
-		assertThrows(NullPointerException.class, () -> productService.save(null));
+		assertThrows(NullPointerException.class, () -> productServiceImpl.save(null));
 	}
 
 	@Test
@@ -111,7 +111,7 @@ class ProductServiceTest {
 		when(productMapper.mapToProductDto(product)).thenReturn(expectedProductDto);
 
 		// when
-		ProductDto actualProductDto = productService.findById(PRODUCT_ID);
+		ProductDto actualProductDto = productServiceImpl.findById(PRODUCT_ID);
 
 		// then
 		verify(productRepository).findById(PRODUCT_ID);
@@ -126,7 +126,7 @@ class ProductServiceTest {
 		when(productRepository.findById(PRODUCT_ID)).thenReturn(Optional.empty());
 
 		// when
-		assertThrows(ProductNotFoundException.class, () -> productService.findById(PRODUCT_ID));
+		assertThrows(ProductNotFoundException.class, () -> productServiceImpl.findById(PRODUCT_ID));
 
 		// then
 		verify(productRepository).findById(PRODUCT_ID);
@@ -151,7 +151,7 @@ class ProductServiceTest {
 		final Pageable pageable = PageRequest.of(PAGE_NUMBER, PAGE_SIZE);
 
 		// when
-		final Page<ProductDto> actualProductDtoList = productService.findAll(pageable);
+		final Page<ProductDto> actualProductDtoList = productServiceImpl.findAll(pageable);
 
 		// then
 		verify(productRepository).findAll(any(Pageable.class));
@@ -172,7 +172,7 @@ class ProductServiceTest {
 		final Pageable pageable = PageRequest.of(PAGE_NUMBER, PAGE_SIZE);
 
 		// when
-		assertThrows(ProductNotFoundException.class, () -> productService.findAll(pageable));
+		assertThrows(ProductNotFoundException.class, () -> productServiceImpl.findAll(pageable));
 
 		// then
 		verify(productRepository).findAll(pageable);
@@ -188,7 +188,7 @@ class ProductServiceTest {
 		when(productMapper.mapToProductDto(product)).thenReturn(productDto);
 
 		// when
-		final ProductDto actualeProductDto = productService.findByName(PRODUCT_NAME);
+		final ProductDto actualeProductDto = productServiceImpl.findByName(PRODUCT_NAME);
 
 		// then
 		verify(productRepository, times(1)).findByName(PRODUCT_NAME);
@@ -205,7 +205,7 @@ class ProductServiceTest {
 		when(productRepository.findByName(PRODUCT_NAME)).thenReturn(Optional.empty());
 
 		// when
-		assertThrows(ProductNotFoundException.class, () -> productService.findByName(PRODUCT_NAME));
+		assertThrows(ProductNotFoundException.class, () -> productServiceImpl.findByName(PRODUCT_NAME));
 
 		// then
 		verify(productRepository).findByName(PRODUCT_NAME);
@@ -224,7 +224,7 @@ class ProductServiceTest {
 		when(productMapper.mapToProductDto(product)).thenReturn(productDto);
 
 		// when
-		final List<ProductDto> productDtoList = productService.findByParams(params);
+		final List<ProductDto> productDtoList = productServiceImpl.findByParams(params);
 
 		// then
 		verify(productRepository).findByParams(params);
@@ -243,7 +243,7 @@ class ProductServiceTest {
 		when(productRepository.findByParams(params)).thenReturn(Collections.emptyList());
 
 		// when
-		assertThrows(ProductNotFoundException.class, () -> productService.findByParams(params));
+		assertThrows(ProductNotFoundException.class, () -> productServiceImpl.findByParams(params));
 
 		// then
 		verify(productRepository).findByParams(params);
@@ -264,7 +264,7 @@ class ProductServiceTest {
 		when(productRepository.saveAndFlush(any(Product.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
 		// when
-		productService.update(productDto);
+		productServiceImpl.update(productDto);
 
 		// then
 		final ArgumentCaptor<Product> productArgumentCaptor = ArgumentCaptor.forClass(Product.class);
@@ -285,7 +285,7 @@ class ProductServiceTest {
 		when(productRepository.findById(productDto.getId())).thenReturn(Optional.empty());
 
 		// when
-		assertThrows(ProductNotFoundException.class, () -> productService.update(productDto));
+		assertThrows(ProductNotFoundException.class, () -> productServiceImpl.update(productDto));
 
 		// then
 		verify(productRepository).findById(productDto.getId());
@@ -306,7 +306,7 @@ class ProductServiceTest {
 		when(orderRepository.findOrdersByProductId(PRODUCT_ID)).thenReturn(Collections.emptyList());
 
 		// when
-		productService.deleteByID(PRODUCT_ID);
+		productServiceImpl.deleteByID(PRODUCT_ID);
 
 		// then
 		verify(waitingListRepository).findByProduct(product);
@@ -322,7 +322,7 @@ class ProductServiceTest {
 		when(productRepository.findById(PRODUCT_ID)).thenThrow(ProductNotFoundException.class);
 
 		// when
-		assertThrows(ProductNotFoundException.class, () -> productService.deleteByID(PRODUCT_ID));
+		assertThrows(ProductNotFoundException.class, () -> productServiceImpl.deleteByID(PRODUCT_ID));
 
 		// then
 		verify(productRepository, never()).deleteById(PRODUCT_ID);

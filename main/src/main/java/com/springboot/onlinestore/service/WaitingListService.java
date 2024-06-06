@@ -4,7 +4,7 @@ import com.springboot.onlinestore.domain.dto.WaitingLIstDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface IWaitingListService {
+public interface WaitingListService {
 
 	void save(long id, String username);
 

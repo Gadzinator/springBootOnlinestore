@@ -4,8 +4,8 @@ import com.springboot.onlinestore.domain.UserPrincipal;
 import com.springboot.onlinestore.domain.dto.JwtRequest;
 import com.springboot.onlinestore.exception.AuthenticationFailedException;
 import com.springboot.onlinestore.exception.UserNotFoundException;
-import com.springboot.onlinestore.repository.IUserRepository;
-import com.springboot.onlinestore.service.IAuthService;
+import com.springboot.onlinestore.repository.UserRepository;
+import com.springboot.onlinestore.service.AuthService;
 import com.springboot.onlinestore.utils.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -19,11 +19,11 @@ import org.springframework.stereotype.Service;
 @Log4j2
 @RequiredArgsConstructor
 @Service
-public class AuthService implements IAuthService {
+public class AuthServiceImpl implements AuthService {
 
 	private final JwtTokenUtils jwtTokenUtils;
 
-	private final IUserRepository userRepository;
+	private final UserRepository userRepository;
 
 	private final PasswordEncoder passwordEncoder;
 

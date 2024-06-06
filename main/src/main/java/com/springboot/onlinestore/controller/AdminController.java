@@ -2,7 +2,7 @@ package com.springboot.onlinestore.controller;
 
 import com.springboot.onlinestore.domain.dto.UserDto;
 import com.springboot.onlinestore.domain.dto.UserRoleChangeRequest;
-import com.springboot.onlinestore.service.IUserService;
+import com.springboot.onlinestore.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,7 +24,7 @@ import java.util.List;
 @RequestMapping("/admins")
 public class AdminController {
 
-	private final IUserService userService;
+	private final UserService userService;
 
 	@GetMapping("/id/{id}")
 	public ResponseEntity<UserDto> findById(@PathVariable(value = "id") Long id) {

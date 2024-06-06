@@ -1,8 +1,8 @@
 package com.springboot.onlinestore.controller;
 
 import com.springboot.onlinestore.domain.dto.ProductDto;
-import com.springboot.onlinestore.service.IProductService;
-import com.springboot.onlinestore.service.impl.ProductService;
+import com.springboot.onlinestore.service.ProductService;
+import com.springboot.onlinestore.service.impl.ProductServiceImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,10 +25,10 @@ import java.util.Map;
 @RequestMapping("/products")
 public class ProductController {
 
-	private final IProductService productService;
+	private final ProductService productService;
 
-	public ProductController(ProductService productService) {
-		this.productService = productService;
+	public ProductController(ProductServiceImpl productServiceImpl) {
+		this.productService = productServiceImpl;
 	}
 
 	@PostMapping

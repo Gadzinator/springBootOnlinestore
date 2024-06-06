@@ -9,10 +9,10 @@ import com.springboot.onlinestore.exception.ProductNotFoundException;
 import com.springboot.onlinestore.exception.UserNotFoundException;
 import com.springboot.onlinestore.exception.WaitingListNotFoundException;
 import com.springboot.onlinestore.mapper.WaitingListMapper;
-import com.springboot.onlinestore.repository.IProductRepository;
-import com.springboot.onlinestore.repository.IUserRepository;
-import com.springboot.onlinestore.repository.IWaitingListRepository;
-import com.springboot.onlinestore.service.IWaitingListService;
+import com.springboot.onlinestore.repository.ProductRepository;
+import com.springboot.onlinestore.repository.UserRepository;
+import com.springboot.onlinestore.repository.WaitingListRepository;
+import com.springboot.onlinestore.service.WaitingListService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -25,13 +25,13 @@ import java.util.Optional;
 @Log4j2
 @AllArgsConstructor
 @Service
-public class WaitingListService implements IWaitingListService {
+public class WaitingListServiceImpl implements WaitingListService {
 
-	private final IWaitingListRepository waitingListRepository;
+	private final WaitingListRepository waitingListRepository;
 
-	private final IProductRepository productRepository;
+	private final ProductRepository productRepository;
 
-	private final IUserRepository userRepository;
+	private final UserRepository userRepository;
 
 	private final WaitingListMapper waitingListMapper;
 

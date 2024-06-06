@@ -1,6 +1,6 @@
 package com.springboot.onlinestore.security;
 
-import com.springboot.onlinestore.service.IAuthService;
+import com.springboot.onlinestore.service.AuthService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -11,7 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class AuthenticationProvider {
 
 	@Bean
-	public DaoAuthenticationProvider daoAuthenticationProvider(IAuthService authService) {
+	public DaoAuthenticationProvider daoAuthenticationProvider(AuthService authService) {
 		DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
 		daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
 		daoAuthenticationProvider.setUserDetailsService(authService);

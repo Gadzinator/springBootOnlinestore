@@ -9,8 +9,8 @@ import com.springboot.onlinestore.exception.PasswordMismatchException;
 import com.springboot.onlinestore.exception.UserNotFoundException;
 import com.springboot.onlinestore.exception.UsernameNotUniqueException;
 import com.springboot.onlinestore.mapper.UserMapper;
-import com.springboot.onlinestore.repository.IUserRepository;
-import com.springboot.onlinestore.service.IUserService;
+import com.springboot.onlinestore.repository.UserRepository;
+import com.springboot.onlinestore.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -25,9 +25,9 @@ import java.util.Optional;
 @Log4j2
 @AllArgsConstructor
 @Service
-public class UserService implements IUserService {
+public class UserServiceImpl implements UserService {
 
-	private IUserRepository userRepository;
+	private UserRepository userRepository;
 
 	private final PasswordEncoder passwordEncoder;
 

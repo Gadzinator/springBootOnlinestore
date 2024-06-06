@@ -2,7 +2,7 @@ package com.springboot.onlinestore.controller;
 
 import com.springboot.onlinestore.domain.dto.OrderRequestDto;
 import com.springboot.onlinestore.domain.dto.OrderResponseDto;
-import com.springboot.onlinestore.service.IOrderService;
+import com.springboot.onlinestore.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,7 +26,7 @@ import java.util.List;
 @RequestMapping("/orders")
 public class OrderController {
 
-	private final IOrderService orderService;
+	private final OrderService orderService;
 
 	@PostMapping
 	public ResponseEntity<?> save(@RequestBody(required = false) @Valid OrderRequestDto orderRequestDto) {

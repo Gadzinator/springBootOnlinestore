@@ -8,11 +8,11 @@ import com.springboot.onlinestore.domain.entity.WaitingList;
 import com.springboot.onlinestore.exception.ProductInUseException;
 import com.springboot.onlinestore.exception.ProductNotFoundException;
 import com.springboot.onlinestore.mapper.ProductMapper;
-import com.springboot.onlinestore.repository.ICategoryRepository;
-import com.springboot.onlinestore.repository.IOrderRepository;
-import com.springboot.onlinestore.repository.IProductRepository;
-import com.springboot.onlinestore.repository.IWaitingListRepository;
-import com.springboot.onlinestore.service.IProductService;
+import com.springboot.onlinestore.repository.CategoryRepository;
+import com.springboot.onlinestore.repository.OrderRepository;
+import com.springboot.onlinestore.repository.ProductRepository;
+import com.springboot.onlinestore.repository.WaitingListRepository;
+import com.springboot.onlinestore.service.ProductService;
 import com.springboot.onlinestore.utils.DateConstant;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -31,15 +31,15 @@ import java.util.Optional;
 @Log4j2
 @AllArgsConstructor
 @Service
-public class ProductService implements IProductService {
+public class ProductServiceImpl implements ProductService {
 
-	private IProductRepository productRepository;
+	private ProductRepository productRepository;
 
-	private ICategoryRepository categoryRepository;
+	private CategoryRepository categoryRepository;
 
-	private IWaitingListRepository waitingListRepository;
+	private WaitingListRepository waitingListRepository;
 
-	private IOrderRepository orderRepository;
+	private OrderRepository orderRepository;
 
 	private ProductMapper productMapper;
 

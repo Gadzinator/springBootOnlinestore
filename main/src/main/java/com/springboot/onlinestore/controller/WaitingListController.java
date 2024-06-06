@@ -2,7 +2,7 @@ package com.springboot.onlinestore.controller;
 
 
 import com.springboot.onlinestore.domain.dto.WaitingLIstDto;
-import com.springboot.onlinestore.service.IWaitingListService;
+import com.springboot.onlinestore.service.WaitingListService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/waitingLists")
 public class WaitingListController {
 
-	private final IWaitingListService waitingListService;
+	private final WaitingListService waitingListService;
 
 	@PostMapping("/{productId}/{username}")
 	public ResponseEntity<?> save(@PathVariable(value = "productId") Long productId, @PathVariable(value = "username") String username) {

@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class IProductRepositoryTest {
 
 	@Resource
-	private IProductRepository productRepository;
+	private ProductRepository productRepository;
 
 	private static final String UPDATE_PRODUCT_NAME = "Updated Product Name";
 

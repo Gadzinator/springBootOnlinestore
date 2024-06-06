@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springboot.onlinestore.domain.dto.CategoryDto;
 import com.springboot.onlinestore.domain.dto.ProductDto;
 import com.springboot.onlinestore.exception.ProductNotFoundException;
-import com.springboot.onlinestore.service.IProductService;
+import com.springboot.onlinestore.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ class ProductControllerTest {
 	private ObjectMapper objectMapper;
 
 	@Autowired
-	private IProductService productService;
+	private ProductService productService;
 
 	@BeforeEach
 	void setUp() {

@@ -4,8 +4,8 @@ import com.springboot.onlinestore.domain.dto.JwtRequest;
 import com.springboot.onlinestore.domain.dto.JwtResponse;
 import com.springboot.onlinestore.domain.dto.ChangePasswordRequest;
 import com.springboot.onlinestore.domain.dto.RegistrationUserDto;
-import com.springboot.onlinestore.service.IAuthService;
-import com.springboot.onlinestore.service.IUserService;
+import com.springboot.onlinestore.service.AuthService;
+import com.springboot.onlinestore.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,9 +22,9 @@ import java.security.Principal;
 @AllArgsConstructor
 public class AuthController {
 
-	private final IUserService userService;
+	private final UserService userService;
 
-	private final IAuthService authService;
+	private final AuthService authService;
 
 	@PostMapping("/auth")
 	public ResponseEntity<?> createAuthToken(@RequestBody @Valid JwtRequest authRequest) {
