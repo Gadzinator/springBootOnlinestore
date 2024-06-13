@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "WaitingListController", description = "Working with waiting lists")
 public interface WaitingListController {
@@ -98,8 +99,9 @@ public interface WaitingListController {
 					content = @Content),
 	})
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	@GetMapping("/{page}/{size}")
-	ResponseEntity<?> findAll(@PathVariable("page") int page, @PathVariable("size") int size);
+	@GetMapping()
+	ResponseEntity<?> findAll(@RequestParam(value = "page", defaultValue = "0") int page,
+							  @RequestParam(value = "size", defaultValue = "10") int size);
 
 	@Operation(summary = "Update waiting list", security = @SecurityRequirement(name = "bearerAuth"))
 	@ApiResponses(value = {

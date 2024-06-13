@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -65,7 +66,7 @@ public interface OrderController {
 					})
 	})
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	@GetMapping("/id/{id}")
+	@GetMapping("/{id}")
 	ResponseEntity<OrderResponseDto> findById(@PathVariable(value = "id") Long id);
 
 	@Operation(summary = "Find all orders")
@@ -80,8 +81,9 @@ public interface OrderController {
 					})
 	})
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	@GetMapping("/{page}/{size}")
-	ResponseEntity<List<OrderResponseDto>> findAll(@PathVariable("page") int page, @PathVariable("size") int size);
+	@GetMapping()
+	ResponseEntity<List<OrderResponseDto>> findAll(@RequestParam(value = "page", defaultValue = "0") int page,
+												   @RequestParam(value = "size", defaultValue = "10") int size);
 
 	@Operation(summary = "Update order")
 	@ApiResponses(value = {

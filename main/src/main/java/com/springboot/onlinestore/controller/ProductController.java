@@ -64,8 +64,9 @@ public interface ProductController {
 									array = @ArraySchema(schema = @Schema(implementation = ProductDto.class)))
 					})
 	})
-	@GetMapping("/{page}/{size}")
-	ResponseEntity<List<ProductDto>> findAll(@PathVariable("page") int page, @PathVariable("size") int size);
+	@GetMapping("/all")
+	ResponseEntity<List<ProductDto>> findAll(@RequestParam(value = "page", defaultValue = "0") int page,
+											 @RequestParam(value = "size", defaultValue = "10") int size);
 
 	@Operation(summary = "Find product by id")
 	@ApiResponses(value = {
@@ -78,7 +79,7 @@ public interface ProductController {
 									schema = @Schema(implementation = ProductDto.class))
 					})
 	})
-	@GetMapping("/id/{id}")
+	@GetMapping("/{id}")
 	ResponseEntity<?> findById(@PathVariable(value = "id") Long id);
 
 
@@ -93,8 +94,8 @@ public interface ProductController {
 									schema = @Schema(implementation = ProductDto.class))
 					})
 	})
-	@GetMapping("/name/{name}")
-	ResponseEntity<?> findByName(@PathVariable(value = "name") String name);
+	@GetMapping("/name")
+	ResponseEntity<?> findByName(@RequestParam(value = "name") String name);
 
 	@Operation(summary = "Find by params")
 	@ApiResponses(value = {

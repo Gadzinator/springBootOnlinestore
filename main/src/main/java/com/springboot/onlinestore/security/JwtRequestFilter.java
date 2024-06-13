@@ -1,5 +1,6 @@
 package com.springboot.onlinestore.security;
 
+import com.springboot.onlinestore.service.AuthService;
 import com.springboot.onlinestore.utils.JwtTokenUtils;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.SignatureException;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 public class JwtRequestFilter extends OncePerRequestFilter {
 
 	private final JwtTokenUtils jwtTokenUtils;
+	private final AuthService authService;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -44,6 +46,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 		}
 
 		if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+			authService.loadUserByUsername(userName);
+
 			UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userName, null,
 					jwtTokenUtils.getRoles(jwt).stream()
 							.map(SimpleGrantedAuthority::new)

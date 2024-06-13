@@ -92,7 +92,7 @@ class ProductControllerTest {
 		final ProductDto productDto = createProductDto();
 		productService.save(productDto);
 
-		mockMvc.perform(get("/products/0/10"))
+		mockMvc.perform(get("/products/all"))
 				.andExpect(status().isOk());
 	}
 
@@ -101,7 +101,7 @@ class ProductControllerTest {
 		final ProductDto productDto = createProductDto();
 		productService.save(productDto);
 
-		mockMvc.perform(get("/products/id/{id}", NOT_FOUND_PRODUCT_ID))
+		mockMvc.perform(get("/products/{id}", NOT_FOUND_PRODUCT_ID))
 				.andExpect(status().isNotFound())
 				.andExpect(result -> assertEquals("Product not was found by id " + NOT_FOUND_PRODUCT_ID,
 						Objects.requireNonNull(result.getResolvedException()).getMessage()));
@@ -112,7 +112,7 @@ class ProductControllerTest {
 		final ProductDto productDto = createProductDto();
 		productService.save(productDto);
 
-		mockMvc.perform(get("/products/id/{id}", PRODUCT_ID)
+		mockMvc.perform(get("/products/{id}", PRODUCT_ID)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(productDto)))
 				.andExpect(status().isOk());
@@ -124,7 +124,8 @@ class ProductControllerTest {
 		productDto.setName("Product");
 		productService.save(productDto);
 
-		mockMvc.perform(get("/products/name/{name}", "Product")
+		mockMvc.perform(get("/products/name")
+						.param("name", "Product")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(productDto)))
 				.andExpect(status().isOk());

@@ -44,8 +44,9 @@ public class ProductControllerImpl implements ProductController {
 	}
 
 	@Override
-	@GetMapping("/{page}/{size}")
-	public ResponseEntity<List<ProductDto>> findAll(@PathVariable("page") int page, @PathVariable("size") int size) {
+	@GetMapping("/all")
+	public ResponseEntity<List<ProductDto>> findAll(@RequestParam(value = "page", defaultValue = "0") int page,
+													@RequestParam(value = "size", defaultValue = "10") int size) {
 		final Pageable pageable = PageRequest.of(page, size);
 		Page<ProductDto> productsPage = productService.findAll(pageable);
 
@@ -53,7 +54,7 @@ public class ProductControllerImpl implements ProductController {
 	}
 
 	@Override
-	@GetMapping("/id/{id}")
+	@GetMapping("/{id}")
 	public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
 		ProductDto productDto = productService.findById(id);
 
@@ -61,8 +62,8 @@ public class ProductControllerImpl implements ProductController {
 	}
 
 	@Override
-	@GetMapping("/name/{name}")
-	public ResponseEntity<?> findByName(@PathVariable(value = "name") String name) {
+	@GetMapping("/name")
+	public ResponseEntity<?> findByName(@RequestParam(value = "name") String name) {
 		return new ResponseEntity<>(productService.findByName(name), HttpStatus.OK);
 	}
 

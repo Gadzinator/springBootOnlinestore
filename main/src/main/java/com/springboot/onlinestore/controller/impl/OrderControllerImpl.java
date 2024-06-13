@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -43,14 +44,15 @@ public class OrderControllerImpl implements OrderController {
 	}
 
 	@Override
-	@GetMapping("/id/{id}")
+	@GetMapping("/{id}")
 	public ResponseEntity<OrderResponseDto> findById(@PathVariable(value = "id") Long id) {
 		return new ResponseEntity<>(orderService.findById(id), HttpStatus.OK);
 	}
 
 	@Override
-	@GetMapping("/{page}/{size}")
-	public ResponseEntity<List<OrderResponseDto>> findAll(@PathVariable("page") int page, @PathVariable("size") int size) {
+	@GetMapping()
+	public ResponseEntity<List<OrderResponseDto>> findAll(@RequestParam(value = "page", defaultValue = "0") int page,
+														  @RequestParam(value = "size", defaultValue = "10") int size) {
 		final Pageable pageable = PageRequest.of(page, size);
 		Page<OrderResponseDto> ordersPage = orderService.findAll(pageable);
 

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -64,8 +65,9 @@ public interface AdminController {
 									array = @ArraySchema(schema = @Schema(implementation = UserDto.class)))
 					})
 	})
-	@GetMapping("/{page}/{size}")
-	ResponseEntity<List<UserDto>> findAll(@PathVariable("page") int page, @PathVariable("size") int size);
+	@GetMapping()
+	ResponseEntity<List<UserDto>> findAll(@RequestParam(value = "page", defaultValue = "0") int page,
+										  @RequestParam(value = "size", defaultValue = "10") int size);
 
 	@Operation(summary = "Find user by name")
 	@ApiResponses(value = {

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "WaitingListController", description = "Working with waitingLists")
@@ -45,8 +46,9 @@ public class WaitingListControllerImpl implements WaitingListController {
 	}
 
 	@Override
-	@GetMapping("/{page}/{size}")
-	public ResponseEntity<?> findAll(@PathVariable("page") int page, @PathVariable("size") int size) {
+	@GetMapping()
+	public ResponseEntity<?> findAll(@RequestParam(value = "page", defaultValue = "0") int page,
+									 @RequestParam(value = "size", defaultValue = "10") int size) {
 		final Pageable pageable = PageRequest.of(page, size);
 		final Page<WaitingLIstDto> waitingLIstDtoPage = waitingListService.findAll(pageable);
 

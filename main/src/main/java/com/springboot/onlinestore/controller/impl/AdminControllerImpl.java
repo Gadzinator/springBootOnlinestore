@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -30,14 +31,15 @@ public class AdminControllerImpl implements AdminController {
 	private final UserService userService;
 
 	@Override
-	@GetMapping("/id/{id}")
+	@GetMapping("/{id}")
 	public ResponseEntity<UserDto> findById(@PathVariable(value = "id") Long id) {
 		return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);
 	}
 
 	@Override
-	@GetMapping("/{page}/{size}")
-	public ResponseEntity<List<UserDto>> findAll(@PathVariable("page") int page, @PathVariable("size") int size) {
+	@GetMapping()
+	public ResponseEntity<List<UserDto>> findAll(@RequestParam(value = "page", defaultValue = "0") int page,
+												 @RequestParam(value = "size", defaultValue = "10") int size) {
 		final Pageable pageable = PageRequest.of(page, size);
 		Page<UserDto> usersPage = userService.findAll(pageable);
 
@@ -45,8 +47,8 @@ public class AdminControllerImpl implements AdminController {
 	}
 
 	@Override
-	@GetMapping("/name/{name}")
-	public ResponseEntity<UserDto> findByName(@PathVariable(value = "name") String name) {
+	@GetMapping("/name")
+	public ResponseEntity<UserDto> findByName(@RequestParam(value = "name") String name) {
 		return new ResponseEntity<>(userService.findByName(name), HttpStatus.OK);
 	}
 
