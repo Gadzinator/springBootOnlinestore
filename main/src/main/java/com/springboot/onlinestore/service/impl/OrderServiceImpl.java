@@ -17,6 +17,7 @@ import com.springboot.onlinestore.service.ProductService;
 import com.springboot.onlinestore.service.UserService;
 import com.springboot.onlinestore.utils.DateConstant;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,21 +30,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Log4j2
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class OrderServiceImpl implements OrderService {
 
-	private UserService userService;
-
-	private OrderRepository orderRepository;
-
-	private ProductService productService;
-
-	private ProductMapper productMapper;
-
-	private OrderMapper orderMapper;
-
-	private UserMapper userMapper;
+	private final UserService userService;
+	private final OrderRepository orderRepository;
+	private final ProductService productService;
+	private final ProductMapper productMapper;
+	private final OrderMapper orderMapper;
+	private final UserMapper userMapper;
 
 	@Transactional
 	@Override

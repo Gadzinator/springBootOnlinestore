@@ -1,6 +1,5 @@
 package com.springboot.onlinestore.controller.impl;
 
-
 import com.springboot.onlinestore.controller.WaitingListController;
 import com.springboot.onlinestore.domain.dto.WaitingLIstDto;
 import com.springboot.onlinestore.service.WaitingListService;

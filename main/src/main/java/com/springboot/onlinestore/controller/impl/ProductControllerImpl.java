@@ -3,7 +3,8 @@ package com.springboot.onlinestore.controller.impl;
 import com.springboot.onlinestore.controller.ProductController;
 import com.springboot.onlinestore.domain.dto.ProductDto;
 import com.springboot.onlinestore.service.ProductService;
-import com.springboot.onlinestore.service.impl.ProductServiceImpl;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,15 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Map;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/products")
 public class ProductControllerImpl implements ProductController {
 
 	private final ProductService productService;
-
-	public ProductControllerImpl(ProductServiceImpl productServiceImpl) {
-		this.productService = productServiceImpl;
-	}
 
 	@Override
 	@PostMapping

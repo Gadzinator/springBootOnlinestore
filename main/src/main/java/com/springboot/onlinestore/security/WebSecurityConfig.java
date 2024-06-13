@@ -1,6 +1,5 @@
 package com.springboot.onlinestore.security;
 
-
 import com.springboot.onlinestore.exception.CustomAccessDeniedHandler;
 import com.springboot.onlinestore.exception.CustomAuthenticationEntryPoint;
 import com.springboot.onlinestore.exception.CustomAuthenticationFailureHandler;
@@ -32,7 +31,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig {
 
 	private final String ROLE_ADMIN = "ADMIN";
-
 	private final JwtRequestFilter requestFilter;
 
 	@Bean

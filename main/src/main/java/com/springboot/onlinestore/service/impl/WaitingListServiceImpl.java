@@ -28,11 +28,8 @@ import java.util.Optional;
 public class WaitingListServiceImpl implements WaitingListService {
 
 	private final WaitingListRepository waitingListRepository;
-
 	private final ProductRepository productRepository;
-
 	private final UserRepository userRepository;
-
 	private final WaitingListMapper waitingListMapper;
 
 	@Transactional

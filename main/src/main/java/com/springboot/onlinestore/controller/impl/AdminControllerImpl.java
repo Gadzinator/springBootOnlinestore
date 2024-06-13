@@ -6,6 +6,7 @@ import com.springboot.onlinestore.domain.dto.UserRoleChangeRequest;
 import com.springboot.onlinestore.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +25,7 @@ import java.util.List;
 
 @Tag(name = "AdminController", description = "Administrator only")
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/admins")
 public class AdminControllerImpl implements AdminController {
 

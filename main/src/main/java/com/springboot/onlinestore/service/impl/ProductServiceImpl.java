@@ -14,7 +14,7 @@ import com.springboot.onlinestore.repository.ProductRepository;
 import com.springboot.onlinestore.repository.WaitingListRepository;
 import com.springboot.onlinestore.service.ProductService;
 import com.springboot.onlinestore.utils.DateConstant;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,19 +29,15 @@ import java.util.Map;
 import java.util.Optional;
 
 @Log4j2
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class ProductServiceImpl implements ProductService {
 
-	private ProductRepository productRepository;
-
-	private CategoryRepository categoryRepository;
-
-	private WaitingListRepository waitingListRepository;
-
-	private OrderRepository orderRepository;
-
-	private ProductMapper productMapper;
+	private final ProductRepository productRepository;
+	private final CategoryRepository categoryRepository;
+	private final WaitingListRepository waitingListRepository;
+	private final OrderRepository orderRepository;
+	private final ProductMapper productMapper;
 
 	@Transactional
 	@Override

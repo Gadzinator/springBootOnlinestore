@@ -11,7 +11,7 @@ import com.springboot.onlinestore.exception.UsernameNotUniqueException;
 import com.springboot.onlinestore.mapper.UserMapper;
 import com.springboot.onlinestore.repository.UserRepository;
 import com.springboot.onlinestore.service.UserService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,15 +23,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Log4j2
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
 
-	private UserRepository userRepository;
-
+	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
-
-	private UserMapper userMapper;
+	private final UserMapper userMapper;
 
 	@Transactional
 	@Override
