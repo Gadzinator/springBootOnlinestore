@@ -5,6 +5,8 @@ import com.springboot.onlinestore.domain.dto.RegistrationUserDto;
 import com.springboot.onlinestore.domain.dto.UserDto;
 import com.springboot.onlinestore.domain.entity.Role;
 import com.springboot.onlinestore.domain.entity.User;
+import com.springboot.onlinestore.event.AccessType;
+import com.springboot.onlinestore.event.EntityEvent;
 import com.springboot.onlinestore.exception.PasswordMismatchException;
 import com.springboot.onlinestore.exception.UserNotFoundException;
 import com.springboot.onlinestore.exception.UsernameNotUniqueException;
@@ -13,6 +15,7 @@ import com.springboot.onlinestore.repository.UserRepository;
 import com.springboot.onlinestore.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -30,6 +33,7 @@ public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final UserMapper userMapper;
+	private final ApplicationEventPublisher applicationEventPublisher;
 
 	@Transactional
 	@Override
@@ -42,6 +46,7 @@ public class UserServiceImpl implements UserService {
 		User user = createUserFromRegistrationUserDto(registrationUserDto);
 		userRepository.save(user);
 		log.info("Finished creating user: " + user);
+		applicationEventPublisher.publishEvent(new EntityEvent(user, AccessType.CREATE));
 
 		return userMapper.mapToUserDto(user);
 	}
@@ -53,6 +58,7 @@ public class UserServiceImpl implements UserService {
 				.map(user -> userMapper.mapToUserDto(user))
 				.orElseThrow(() -> new UserNotFoundException("User was not found by id " + id));
 		log.info("Finished finding user by id: " + userDto);
+		applicationEventPublisher.publishEvent(new EntityEvent(userDto, AccessType.READ));
 
 		return userDto;
 	}
@@ -64,6 +70,7 @@ public class UserServiceImpl implements UserService {
 				.map(user -> userMapper.mapToUserDto(user))
 				.orElseThrow(() -> new UserNotFoundException("User was not found by name " + name));
 		log.info("Finished finding user by name: " + userDto);
+		applicationEventPublisher.publishEvent(new EntityEvent(userDto, AccessType.READ));
 
 		return userDto;
 	}
@@ -80,6 +87,7 @@ public class UserServiceImpl implements UserService {
 			throw new UserNotFoundException(errorMessage);
 		}
 		log.info("Finished finding all users: " + usersPage);
+		applicationEventPublisher.publishEvent(new EntityEvent(usersPage.getContent(), AccessType.READ));
 
 		return usersPage.map(userMapper::mapToUserDto);
 	}
@@ -93,6 +101,7 @@ public class UserServiceImpl implements UserService {
 		user.setRole(Role.valueOf(newRole));
 		userRepository.save(user);
 		log.info("Changed user role: " + user + " to role " + user.getRole());
+		applicationEventPublisher.publishEvent(new EntityEvent(user, AccessType.UPDATE));
 	}
 
 	@Transactional
@@ -102,6 +111,7 @@ public class UserServiceImpl implements UserService {
 		if (userDto != null) {
 			userRepository.deleteById(id);
 		}
+		applicationEventPublisher.publishEvent(new EntityEvent(id, AccessType.DELETE));
 	}
 
 	@Override
@@ -121,6 +131,7 @@ public class UserServiceImpl implements UserService {
 		}
 		user.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
 		log.info("Finished password changed successfully for user: " + userName);
+		applicationEventPublisher.publishEvent(new EntityEvent(user, AccessType.UPDATE));
 	}
 
 	private void validatePasswordMatch(String password, String confirmPassword) {

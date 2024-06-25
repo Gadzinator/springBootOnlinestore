@@ -5,6 +5,8 @@ import com.springboot.onlinestore.domain.entity.Category;
 import com.springboot.onlinestore.domain.entity.Order;
 import com.springboot.onlinestore.domain.entity.Product;
 import com.springboot.onlinestore.domain.entity.WaitingList;
+import com.springboot.onlinestore.event.AccessType;
+import com.springboot.onlinestore.event.EntityEvent;
 import com.springboot.onlinestore.exception.ProductInUseException;
 import com.springboot.onlinestore.exception.ProductNotFoundException;
 import com.springboot.onlinestore.mapper.ProductMapper;
@@ -16,6 +18,7 @@ import com.springboot.onlinestore.service.ProductService;
 import com.springboot.onlinestore.utils.DateConstant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -38,6 +41,7 @@ public class ProductServiceImpl implements ProductService {
 	private final WaitingListRepository waitingListRepository;
 	private final OrderRepository orderRepository;
 	private final ProductMapper productMapper;
+	private final ApplicationEventPublisher applicationEventPublisher;
 
 	@Transactional
 	@Override
@@ -57,15 +61,17 @@ public class ProductServiceImpl implements ProductService {
 		product.setCategory(category);
 		productRepository.save(product);
 		log.info("Finished adding product: " + productDto);
+		applicationEventPublisher.publishEvent(new EntityEvent(productDto, AccessType.CREATE));
 	}
 
 	@Override
 	public ProductDto findById(long id) {
 		log.info("Starting finding product by id: " + id);
 		final ProductDto productDto = productRepository.findById(id)
-				.map(product -> productMapper.mapToProductDto(product))
+				.map(productMapper::mapToProductDto)
 				.orElseThrow(() -> new ProductNotFoundException("Product not was found by id " + id));
 		log.info("Finished finding product by id: " + productDto);
+		applicationEventPublisher.publishEvent(new EntityEvent(productDto, AccessType.READ));
 
 		return productDto;
 	}
@@ -81,6 +87,7 @@ public class ProductServiceImpl implements ProductService {
 			throw new ProductNotFoundException(errorMessage);
 		}
 		log.info("Finished finding all products: " + productsPage);
+		applicationEventPublisher.publishEvent(new EntityEvent(productsPage.getContent(), AccessType.READ));
 
 		return productsPage.map(productMapper::mapToProductDto);
 	}
@@ -89,10 +96,11 @@ public class ProductServiceImpl implements ProductService {
 	public ProductDto findByName(String name) {
 		log.info("Starting finding product by name: " + name);
 		final ProductDto productDto = productRepository.findByName(name)
-				.map(product -> productMapper.mapToProductDto(product))
+				.map(productMapper::mapToProductDto)
 				.orElseThrow(() -> new ProductNotFoundException("Product not was found by name " + name));
 
 		log.info("Finished finding  product by id: " + productDto);
+		applicationEventPublisher.publishEvent(new EntityEvent(productDto, AccessType.READ));
 
 		return productDto;
 	}
@@ -113,6 +121,7 @@ public class ProductServiceImpl implements ProductService {
 			productDtoList.add(productMapper.mapToProductDto(product));
 		}
 		log.info("Finished finding product by params: " + params);
+		applicationEventPublisher.publishEvent(new EntityEvent(productDtoList, AccessType.READ));
 
 		return productDtoList;
 	}
@@ -126,6 +135,7 @@ public class ProductServiceImpl implements ProductService {
 		updateAllFields(product, updateProductDto);
 		productRepository.saveAndFlush(product);
 		log.info("Finished product updated successfully: " + product);
+		applicationEventPublisher.publishEvent(new EntityEvent(product, AccessType.UPDATE));
 	}
 
 	@Transactional
@@ -140,6 +150,7 @@ public class ProductServiceImpl implements ProductService {
 
 		productRepository.deleteById(id);
 		log.info("Finished Product deleted successfully");
+		applicationEventPublisher.publishEvent(new EntityEvent(id, AccessType.DELETE));
 	}
 
 	private Category findCategoryByName(String categoryName) {

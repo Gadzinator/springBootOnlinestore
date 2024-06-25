@@ -7,6 +7,8 @@ import com.springboot.onlinestore.domain.dto.UserDto;
 import com.springboot.onlinestore.domain.entity.Order;
 import com.springboot.onlinestore.domain.entity.Product;
 import com.springboot.onlinestore.domain.entity.User;
+import com.springboot.onlinestore.event.AccessType;
+import com.springboot.onlinestore.event.EntityEvent;
 import com.springboot.onlinestore.exception.OrderNotFoundException;
 import com.springboot.onlinestore.mapper.OrderMapper;
 import com.springboot.onlinestore.mapper.ProductMapper;
@@ -16,9 +18,9 @@ import com.springboot.onlinestore.service.OrderService;
 import com.springboot.onlinestore.service.ProductService;
 import com.springboot.onlinestore.service.UserService;
 import com.springboot.onlinestore.utils.DateConstant;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -40,6 +42,7 @@ public class OrderServiceImpl implements OrderService {
 	private final ProductMapper productMapper;
 	private final OrderMapper orderMapper;
 	private final UserMapper userMapper;
+	private final ApplicationEventPublisher applicationEventPublisher;
 
 	@Transactional
 	@Override
@@ -52,6 +55,7 @@ public class OrderServiceImpl implements OrderService {
 		order.setUser(user);
 		orderRepository.save(order);
 		log.info("Finishing adding an order " + order);
+		applicationEventPublisher.publishEvent(new EntityEvent(user, AccessType.CREATE));
 	}
 
 	@Transactional
@@ -67,6 +71,7 @@ public class OrderServiceImpl implements OrderService {
 		orderResponseDto.setTotalPrice(totalPrice);
 		orderResponseDto.setUserId(userDto.getId());
 		log.info("Finishing finding order by id: " + orderResponseDto);
+		applicationEventPublisher.publishEvent(new EntityEvent(userDto, AccessType.READ));
 
 		return orderResponseDto;
 	}
@@ -83,6 +88,7 @@ public class OrderServiceImpl implements OrderService {
 			throw new OrderNotFoundException(errorMessage);
 		}
 		log.info("Finished finding all orders: " + ordersPage);
+		applicationEventPublisher.publishEvent(new EntityEvent(ordersPage.getContent(), AccessType.READ));
 
 		return ordersPage.map(orderMapper::mapToOrderDto);
 	}
@@ -102,8 +108,10 @@ public class OrderServiceImpl implements OrderService {
 		} else {
 			final String errorMessage = "Order not was found by id " + orderRequestDto.getId();
 			log.error(errorMessage);
+
 			throw new OrderNotFoundException(errorMessage);
 		}
+		applicationEventPublisher.publishEvent(new EntityEvent(orderResponseDto, AccessType.UPDATE));
 	}
 
 	@Transactional
@@ -121,6 +129,7 @@ public class OrderServiceImpl implements OrderService {
 			log.error(errorMessage);
 			throw new OrderNotFoundException(errorMessage);
 		}
+		applicationEventPublisher.publishEvent(new EntityEvent(id, AccessType.DELETE));
 	}
 
 	private int getTotalPrice(List<ProductDto> products) {

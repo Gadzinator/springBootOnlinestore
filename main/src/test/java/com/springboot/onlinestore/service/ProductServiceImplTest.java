@@ -4,6 +4,7 @@ import com.springboot.onlinestore.domain.dto.CategoryDto;
 import com.springboot.onlinestore.domain.dto.ProductDto;
 import com.springboot.onlinestore.domain.entity.Category;
 import com.springboot.onlinestore.domain.entity.Product;
+import com.springboot.onlinestore.event.EntityEvent;
 import com.springboot.onlinestore.exception.ProductNotFoundException;
 import com.springboot.onlinestore.mapper.ProductMapperImpl;
 import com.springboot.onlinestore.repository.CategoryRepository;
@@ -19,6 +20,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -38,6 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -69,6 +72,9 @@ class ProductServiceImplTest {
 	@Mock
 	private WaitingListRepository waitingListRepository;
 
+	@Mock
+	private ApplicationEventPublisher applicationEventPublisher;
+
 	@InjectMocks
 	private ProductServiceImpl productServiceImpl;
 
@@ -83,6 +89,7 @@ class ProductServiceImplTest {
 		when(productMapper.mapToProduct(any(ProductDto.class))).thenReturn(product);
 		when(categoryRepository.findByName(productDto.getCategory())).thenReturn(Optional.of(category));
 		when(productRepository.save(any(Product.class))).thenReturn(product);
+		doNothing().when(applicationEventPublisher).publishEvent(any(EntityEvent.class));
 
 		// when
 		productServiceImpl.save(productDto);
@@ -91,6 +98,8 @@ class ProductServiceImplTest {
 		verify(productMapper).mapToProduct(productDto);
 		verify(categoryRepository).findByName(productDto.getCategory());
 		verify(productRepository).save(product);
+		verify(applicationEventPublisher).publishEvent(any(EntityEvent.class));
+
 		assertEquals(product.getId(), productDto.getId());
 		assertEquals(product.getName(), productDto.getName());
 	}
@@ -109,6 +118,7 @@ class ProductServiceImplTest {
 
 		when(productRepository.findById(PRODUCT_ID)).thenReturn(Optional.of(product));
 		when(productMapper.mapToProductDto(product)).thenReturn(expectedProductDto);
+		doNothing().when(applicationEventPublisher).publishEvent(any(EntityEvent.class));
 
 		// when
 		ProductDto actualProductDto = productServiceImpl.findById(PRODUCT_ID);
@@ -116,6 +126,7 @@ class ProductServiceImplTest {
 		// then
 		verify(productRepository).findById(PRODUCT_ID);
 		verify(productMapper).mapToProductDto(product);
+		verify(applicationEventPublisher).publishEvent(any(EntityEvent.class));
 
 		assertEquals(expectedProductDto, actualProductDto);
 	}
@@ -147,6 +158,7 @@ class ProductServiceImplTest {
 		when(productRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(products));
 		when(productMapper.mapToProductDto(firstProduct)).thenReturn(firstProductDto);
 		when(productMapper.mapToProductDto(secondProduct)).thenReturn(secondProductDto);
+		doNothing().when(applicationEventPublisher).publishEvent(any(EntityEvent.class));
 
 		final Pageable pageable = PageRequest.of(PAGE_NUMBER, PAGE_SIZE);
 
@@ -157,6 +169,7 @@ class ProductServiceImplTest {
 		verify(productRepository).findAll(any(Pageable.class));
 		verify(productMapper).mapToProductDto(firstProduct);
 		verify(productMapper).mapToProductDto(secondProduct);
+		verify(applicationEventPublisher).publishEvent(any(EntityEvent.class));
 
 		assertFalse(actualProductDtoList.isEmpty());
 		assertEquals(2, actualProductDtoList.getSize());
@@ -186,6 +199,7 @@ class ProductServiceImplTest {
 
 		when(productRepository.findByName(PRODUCT_NAME)).thenReturn(Optional.of(product));
 		when(productMapper.mapToProductDto(product)).thenReturn(productDto);
+		doNothing().when(applicationEventPublisher).publishEvent(any(EntityEvent.class));
 
 		// when
 		final ProductDto actualeProductDto = productServiceImpl.findByName(PRODUCT_NAME);
@@ -193,6 +207,7 @@ class ProductServiceImplTest {
 		// then
 		verify(productRepository, times(1)).findByName(PRODUCT_NAME);
 		verify(productMapper, times(1)).mapToProductDto(product);
+		verify(applicationEventPublisher).publishEvent(any(EntityEvent.class));
 
 		assertEquals(productDto.getId(), actualeProductDto.getId());
 		assertEquals(productDto.getName(), actualeProductDto.getName());
@@ -222,6 +237,7 @@ class ProductServiceImplTest {
 
 		when(productRepository.findByParams(params)).thenReturn(List.of(product));
 		when(productMapper.mapToProductDto(product)).thenReturn(productDto);
+		doNothing().when(applicationEventPublisher).publishEvent(any(EntityEvent.class));
 
 		// when
 		final List<ProductDto> productDtoList = productServiceImpl.findByParams(params);
@@ -229,6 +245,7 @@ class ProductServiceImplTest {
 		// then
 		verify(productRepository).findByParams(params);
 		verify(productMapper).mapToProductDto(product);
+		verify(applicationEventPublisher).publishEvent(any(EntityEvent.class));
 
 		assertEquals(1, productDtoList.size());
 		assertEquals(productDto, productDtoList.get(0));
@@ -262,6 +279,7 @@ class ProductServiceImplTest {
 		when(productRepository.findById(PRODUCT_ID)).thenReturn(Optional.of(product));
 		when(categoryRepository.findByName(productDto.getCategory())).thenReturn(Optional.of(category));
 		when(productRepository.saveAndFlush(any(Product.class))).thenAnswer(invocation -> invocation.getArgument(0));
+		doNothing().when(applicationEventPublisher).publishEvent(any(EntityEvent.class));
 
 		// when
 		productServiceImpl.update(productDto);
@@ -271,7 +289,9 @@ class ProductServiceImplTest {
 
 		verify(productRepository).findById(PRODUCT_ID);
 		verify(categoryRepository).findByName(productDto.getCategory());
+		verify(applicationEventPublisher).publishEvent(any(EntityEvent.class));
 		verify(productRepository).saveAndFlush(productArgumentCaptor.capture());
+
 		final Product savedProduct = productArgumentCaptor.getValue();
 
 		assertEquals("Product Dto", savedProduct.getName());
@@ -296,24 +316,23 @@ class ProductServiceImplTest {
 	public void deleteByIDWhenProductExist() {
 		// given
 		final Product product = createProduct();
-
 		final ProductDto expectedProductDto = createProductDto();
 
-		when(waitingListRepository.findByProduct(product)).thenReturn(Optional.empty());
 		when(productRepository.findById(PRODUCT_ID)).thenReturn(Optional.of(product));
 		when(productMapper.mapToProductDto(product)).thenReturn(expectedProductDto);
 		when(waitingListRepository.findByProduct(product)).thenReturn(Optional.empty());
 		when(orderRepository.findOrdersByProductId(PRODUCT_ID)).thenReturn(Collections.emptyList());
+		doNothing().when(applicationEventPublisher).publishEvent(any(EntityEvent.class));
 
 		// when
 		productServiceImpl.deleteByID(PRODUCT_ID);
 
 		// then
-		verify(waitingListRepository).findByProduct(product);
 		verify(productRepository).findById(PRODUCT_ID);
 		verify(productMapper).mapToProductDto(product);
 		verify(waitingListRepository).findByProduct(product);
 		verify(orderRepository).findOrdersByProductId(PRODUCT_ID);
+		verify(applicationEventPublisher, times(2)).publishEvent(any(EntityEvent.class));
 	}
 
 	@Test

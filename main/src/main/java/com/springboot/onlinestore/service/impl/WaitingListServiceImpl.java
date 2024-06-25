@@ -5,6 +5,8 @@ import com.springboot.onlinestore.domain.dto.WaitingLIstDto;
 import com.springboot.onlinestore.domain.entity.Product;
 import com.springboot.onlinestore.domain.entity.User;
 import com.springboot.onlinestore.domain.entity.WaitingList;
+import com.springboot.onlinestore.event.AccessType;
+import com.springboot.onlinestore.event.EntityEvent;
 import com.springboot.onlinestore.exception.ProductNotFoundException;
 import com.springboot.onlinestore.exception.UserNotFoundException;
 import com.springboot.onlinestore.exception.WaitingListNotFoundException;
@@ -15,6 +17,7 @@ import com.springboot.onlinestore.repository.WaitingListRepository;
 import com.springboot.onlinestore.service.WaitingListService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,6 +34,7 @@ public class WaitingListServiceImpl implements WaitingListService {
 	private final ProductRepository productRepository;
 	private final UserRepository userRepository;
 	private final WaitingListMapper waitingListMapper;
+	private final ApplicationEventPublisher applicationEventPublisher;
 
 	@Transactional
 	@Override
@@ -53,6 +57,7 @@ public class WaitingListServiceImpl implements WaitingListService {
 		}
 		waitingListRepository.save(waitingList);
 		log.info("Finished waitingList added successfully: " + waitingList);
+		applicationEventPublisher.publishEvent(new EntityEvent(waitingList, AccessType.CREATE));
 	}
 
 	@Override
@@ -61,6 +66,7 @@ public class WaitingListServiceImpl implements WaitingListService {
 		final WaitingList waitingList = waitingListRepository.findById(id).orElseThrow(
 				() -> new WaitingListNotFoundException("Waiting list not found by id: " + id));
 		log.info("Finished finding waiting list by id: " + waitingList);
+		applicationEventPublisher.publishEvent(new EntityEvent(waitingList, AccessType.READ));
 
 		return waitingListMapper.mapToWaitingListDto(waitingList);
 	}
@@ -75,7 +81,8 @@ public class WaitingListServiceImpl implements WaitingListService {
 			log.error(errorMessage);
 			throw new WaitingListNotFoundException(errorMessage);
 		}
-		log.info("Finished finding all waiting list: " + waitingListPageable);
+		log.info("Finished finding all waiting list: " + waitingListPage);
+		applicationEventPublisher.publishEvent(new EntityEvent(waitingListPage.getContent(), AccessType.READ));
 
 		return waitingListPage.map(waitingListMapper::mapToWaitingListDto);
 	}
@@ -87,6 +94,7 @@ public class WaitingListServiceImpl implements WaitingListService {
 		WaitingList waitingList = updateAllFields(waitingLIstDto);
 		waitingListRepository.saveAndFlush(waitingList);
 		log.info("Finished updating waiting list: " + waitingList);
+		applicationEventPublisher.publishEvent(new EntityEvent(waitingList, AccessType.UPDATE));
 
 		return waitingListMapper.mapToWaitingListDto(waitingList);
 	}
@@ -95,6 +103,7 @@ public class WaitingListServiceImpl implements WaitingListService {
 	@Override
 	public void delete(long id) {
 		waitingListRepository.deleteById(id);
+		applicationEventPublisher.publishEvent(new EntityEvent(id, AccessType.DELETE));
 	}
 
 	private User findUserByName(String name) {
