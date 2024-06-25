@@ -153,6 +153,21 @@ public class ProductServiceImpl implements ProductService {
 		applicationEventPublisher.publishEvent(new EntityEvent(id, AccessType.DELETE));
 	}
 
+	@Transactional
+	@Override
+	public void updateDateReceived() {
+		log.info("Updating date received");
+		List<Product> products = productRepository.findAll();
+		for (Product product : products) {
+			if (needsUpdate(product)) {
+				product.setReceived(LocalDate.now());
+				productRepository.save(product);
+				log.info("Product updated: " + product);
+			}
+		}
+		log.info("Finished updating product statuses " + products);
+	}
+
 	private Category findCategoryByName(String categoryName) {
 		log.info("Finding category by name: " + categoryName);
 		return categoryRepository.findByName(categoryName)
@@ -212,5 +227,9 @@ public class ProductServiceImpl implements ProductService {
 			throw new ProductInUseException(errorMessage);
 		}
 		log.info("Finished check if product in order: " + product);
+	}
+
+	private boolean needsUpdate(Product product) {
+		return product.getReceived().isBefore(LocalDate.now().minusMonths(3));
 	}
 }

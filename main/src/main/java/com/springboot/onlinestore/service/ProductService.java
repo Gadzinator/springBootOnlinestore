@@ -22,4 +22,6 @@ public interface ProductService {
 	void update(ProductDto updateProductDto);
 
 	void deleteByID(long id);
+
+	void updateDateReceived();
 }
